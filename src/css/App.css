@@ -31,3 +31,9 @@
     border-radius: 50%;
     margin-bottom: 2rem;
 }
+
+@media (min-width: 768px) {
+    .profile-card {
+        width: 49.2% !important;
+    }
+}

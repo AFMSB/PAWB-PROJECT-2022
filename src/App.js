@@ -6,27 +6,23 @@ import Login from "./components/Signin";
 import Signup from "./components/Signup";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-
-
+import ProtectedRoutes from "./ProtectedRoutes";
+import Profile from "./components/Profile";
 
 
 function App() {
     return (
         <div className="App">
-            <Navbar />
-            <div className="auth-wrapper">
-                <div className="auth-inner">
-                    <Routes>
-                        <Route exact path='/' element={<Login/>}/>
-                        <Route path="/sign-in" element={<Login/>}/>
-                        <Route path="/sign-up" element={<Signup/>}/>
-                    </Routes>
-                </div>
-            </div>
-            <div className="b-example-divider">
-
-            </div>
-            <Footer />
+            <Navbar/>
+            <Routes>
+                <Route exact path='/' element={<Login/>}/>
+                <Route path="/sign-in" element={<Login/>}/>
+                <Route path="/sign-up" element={<Signup/>}/>
+                <Route element={<ProtectedRoutes/>}>
+                    <Route path="/profile" element={<Profile/>}/>
+                </Route>
+            </Routes>
+            <Footer/>
         </div>
     );
 }

@@ -62,77 +62,80 @@ const Signup = () => {
         }
     };
     return (
+        <div className="auth-wrapper">
+            <div className="auth-inner">
+                <Form onSubmit={handleSignUp} ref={form}>
+                <img
+                    src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                    alt="profile-img"
+                    className="profile-img-card"
+                />
+                <h3>Sign Up</h3>
 
-        <Form onSubmit={handleSignUp} ref={form}>
-            <img
-                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                alt="profile-img"
-                className="profile-img-card"
-            />
-            <h3>Sign Up</h3>
-
-            {message && (
-                <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
-                        {message}
+                {message && (
+                    <div className="form-group">
+                        <div className="alert alert-danger" role="alert">
+                            {message}
+                        </div>
                     </div>
-                </div>
-            )}
-
-            <div className="mb-3">
-                <label className="form-label">Username</label>
-                <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    placeholder="Username"
-                    required
-                    value={username}
-                    onChange={onChangeUsername}
-                    validations={[required]}
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Password</label>
-                <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    placeholder="Enter password"
-                    required
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required]}
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Confirm Password</label>
-                <Input
-                    type="password"
-                    className="form-control"
-                    name="confirmPassword"
-                    placeholder="Enter confirm password"
-                    required
-                    value={confirmPassword}
-                    onChange={onChangeConfirmPassword}
-                    validations={[required]}
-                />
-            </div>
-
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading && (
-                    <span className="spinner-border spinner-border-sm me-3"/>
                 )}
-                <span>Sign UP</span></button>
 
-            <p className="forgot-password text-right">
-                Already registered? <a href="#">Sign in.</a>
-            </p>
+                <div className="mb-3">
+                    <label className="form-label">Username</label>
+                    <Input
+                        type="text"
+                        className="form-control"
+                        name="username"
+                        placeholder="Username"
+                        required
+                        value={username}
+                        onChange={onChangeUsername}
+                        validations={[required]}
+                    />
+                </div>
 
-            <CheckButton style={{display: "none"}} ref={checkBtn}/>
-        </Form>
+                <div className="mb-3">
+                    <label className="form-label">Password</label>
+                    <Input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                        value={password}
+                        onChange={onChangePassword}
+                        validations={[required]}
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">Confirm Password</label>
+                    <Input
+                        type="password"
+                        className="form-control"
+                        name="confirmPassword"
+                        placeholder="Enter confirm password"
+                        required
+                        value={confirmPassword}
+                        onChange={onChangeConfirmPassword}
+                        validations={[required]}
+                    />
+                </div>
+
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading && (
+                        <span className="spinner-border spinner-border-sm me-3"/>
+                    )}
+                    <span>Sign UP</span></button>
+
+                <p className="forgot-password text-right">
+                    Already registered? <a href="#">Sign in.</a>
+                </p>
+
+                <CheckButton style={{display: "none"}} ref={checkBtn}/>
+            </Form>
+            </div>
+        </div>
     );
 };
 export default Signup;

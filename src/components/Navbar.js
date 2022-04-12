@@ -1,4 +1,3 @@
-import {Link} from "react-router-dom";
 import React, {Component} from "react";
 import NavbarProfile from "./NavbarProfile";
 import NavbarLinks from "./NavbarLinks";
@@ -6,7 +5,7 @@ import NavbarLinks from "./NavbarLinks";
 class Navbar extends Component {
     render() {
         return (
-            <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+            <nav className="navbar navbar-expand-lg navbar-light">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="#">PAW - GeoLocator</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
