@@ -25,7 +25,7 @@ const NavbarProfile = () => {
                 </a>
                 <ul className="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser1">
                     <li><Link className="dropdown-item disabled" to="/sign-in">Username</Link></li>
-                    <li><Link className="dropdown-item" to="/sign-in">Profile</Link></li>
+                    <li><Link className="dropdown-item" to="/profile">Profile</Link></li>
                     <li>
                         <hr className="dropdown-divider"/>
                     </li>

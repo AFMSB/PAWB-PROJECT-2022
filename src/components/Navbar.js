@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import React, {Component} from "react";
 import NavbarProfile from "./NavbarProfile";
+import NavbarLinks from "./NavbarLinks";
 
 class Navbar extends Component {
     render() {
@@ -14,14 +15,7 @@ class Navbar extends Component {
                         <span className="navbar-toggler-icon"/>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarCollapse">
-                        <ul className="navbar-nav me-auto mb-2 mb-md-0">
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/sign-in">Sign In</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/sign-up">Sign Up</Link>
-                            </li>
-                        </ul>
+                        <NavbarLinks/>
                         <NavbarProfile/>
                     </div>
                 </div>
