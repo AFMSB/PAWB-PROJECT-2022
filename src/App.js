@@ -1,12 +1,11 @@
 import React from 'react';
 import './css/App.css';
-import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 
 import Login from "./components/Signin";
 import Signup from "./components/Signup";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import AuthService from "./services/auth.service";
 
 
 
