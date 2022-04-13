@@ -4,7 +4,7 @@ import React, {Component} from "react";
 const NavbarLinks = () => {
     const isAuthenticated = localStorage.getItem("authToken");
     if (isAuthenticated) {
-        return (<ul className="navbar-nav me-auto mb-2 mb-md-0"></ul>);
+        return (<ul className="navbar-nav me-auto mb-2 mb-md-0"/>);
     }else{
         return (
             <ul className="navbar-nav me-auto mb-2 mb-md-0">

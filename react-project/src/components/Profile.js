@@ -1,4 +1,4 @@
-
+import FollowersList from "./FollowersList";
 
 const Profile = () => {
     return (
@@ -8,7 +8,7 @@ const Profile = () => {
                     <div className="card-body">
                         <div className="d-flex flex-column align-items-center text-center">
                             <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin"
-                                 className="rounded-circle" width="150"></img>
+    className="rounded-circle" width="150"/>
                             <div className="mt-3">
                                 <h4>John Doe</h4>
                                 <p className="text-secondary mb-1">Username</p>
@@ -23,6 +23,7 @@ const Profile = () => {
                     <div className="card-body">
                         <div className="d-flex flex-column align-items-center text-center">
                             <h4>Followers</h4>
+                            <FollowersList/>
                         </div>
                     </div>
                 </div>

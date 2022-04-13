@@ -35,7 +35,7 @@ const NavbarProfile = () => {
         )
     } else {
         return (
-            <div></div>
+            <div/>
         );
     }
 

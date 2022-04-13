@@ -126,7 +126,7 @@ const Signup = () => {
                     {loading && (
                         <span className="spinner-border spinner-border-sm me-3"/>
                     )}
-                    <span>Sign UP</span></button>
+                    <span>Sign Up</span></button>
 
                 <p className="forgot-password text-right">
                     Already registered? <a href="#">Sign in.</a>
