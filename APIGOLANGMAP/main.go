@@ -77,6 +77,12 @@ func main() {
 
 	}
 
+	user := router.Group("/api/v1/user")
+	user.Use(services.AuthorizationRequired())
+	{
+		user.GET("/:username", routes.SearchUsersByUsername)
+	}
+
 	router.GET("/socket", routes.WebSocket)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")

@@ -31,7 +31,7 @@ func GetAllFollowers(c *gin.Context) {
 	followers := FetchAllFollowers(userID.(uint))
 
 	if len(followers) <= 0 {
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!"})
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!","data": followers})
 		return
 	}
 
