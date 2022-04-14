@@ -3,7 +3,9 @@ import {Marker} from "react-leaflet";
 import {LocationIcon} from "../components/LocationIcon";
 import MarkerPopup from "../components/MarkerPopup";
 import React from "react";
-import data from "../assets/data.json";
+
+
+
 
 export const truncStr = (string, limit) => {
     return string.length > limit
@@ -83,7 +85,8 @@ export const getCentralGeoCoordinate = (array) => {
     const centralSquareRoot = Math.sqrt(x * x + y * y);
     const centralLatitude = Math.atan2(z, centralSquareRoot);
 
-    return { lat: centralLatitude * 180 / Math.PI, lng: centralLongitude * 180 / Math.PI };
+    return {lat: centralLatitude * 180 / Math.PI, lng: centralLongitude * 180 / Math.PI};
 }
+
 
 export const search = makeRequestCreator();

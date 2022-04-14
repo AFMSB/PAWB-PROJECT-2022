@@ -1,64 +1,38 @@
 {
   "markers": [
     {
-      "popup_text": "SEZ Berlin",
+      "created_at": "2022-04-14T17:19:06.265363Z",
       "geometry": [
-        41.147163, -8.611936
+        41.15157,
+        -8.612402
       ]
     },
     {
-      "popup_text": "Huxley's Neue Welt",
+      "created_at": "2022-04-14T17:19:06.263681Z",
       "geometry": [
-        41.15022,-8.608484
+        41.14782,
+        -8.612777
       ]
     },
     {
-      "popup_text": "Mensch Meier",
+      "created_at": "2022-04-14T17:19:06.261856Z",
       "geometry": [
-        52.535069,
-        13.452312
+        41.14818,
+        -8.611274
       ]
     },
     {
-      "popup_text": "Zur Klappe",
+      "created_at": "2022-04-14T17:19:06.253647Z",
       "geometry": [
-        52.493039,
-        13.387248
+        41.14716,
+        -8.611938
       ]
     },
     {
-      "popup_text": "OHM",
+      "created_at": "2022-04-14T17:19:06.245031Z",
       "geometry": [
-        52.510507,
-        13.42022
-      ]
-    },
-    {
-      "popup_text": "M-BIA",
-      "geometry": [
-        52.522437,
-        13.409063
-      ]
-    },
-    {
-      "popup_text": "Monster Ronson's Ichiban Karaoke",
-      "geometry": [
-        52.505188,
-        13.448437
-      ]
-    },
-    {
-      "popup_text": "Marooush Restaurant - Lounge - Bar - Club",
-      "geometry": [
-        52.500938,
-        13.321438
-      ]
-    },
-    {
-      "popup_text": "Kater Blau",
-      "geometry": [
-        52.512187,
-        13.425563
+        41.150227,
+        -8.608478
       ]
     }
   ]
