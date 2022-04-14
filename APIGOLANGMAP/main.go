@@ -22,6 +22,7 @@ func init() {
 	services.Db.Exec("alter table positions add column if not exists geolocation geography(point)")
 	services.Db.AutoMigrate(&model.Follower{})
 	services.CreateAdmin()
+	services.CreateUsers()
 	//	services.CloseDatabase()
 	repository.GetDataBase(services.Db)
 	services.StartService()
