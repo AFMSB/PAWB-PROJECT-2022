@@ -34,11 +34,69 @@
 
 @media (min-width: 768px) {
     .profile-card {
-        width: 49.2% !important;
+        width: 73.8% !important;
     }
 }
 
 .leaflet-container {
     width: 100%;
-    height: 50vh;
+    height: 100%;
+}
+
+.submit-search-btn {
+    position: relative;
+    margin-left: -80px;
+    width: 80px;
+    height: 40px;
+    border: 0;
+    -webkit-appearance: none;
+    border-radius: 0 10px 10px 0;
+    background: linear-gradient(180deg,#6fc4ff 0,#4a9cd5 100%);
+    font-family: Ubuntu,serif;
+    font-weight: 300;
+    color: #fff;
+}
+
+input[type=text] {
+    position: relative;
+    z-index: 0;
+    padding-right: 80px;
+    width: 100%;
+}
+
+.widgets-input {
+    border-radius: 10px;
+    height: 40px;
+    text-align: center;
+}
+
+
+.card-body{
+    height: 313px;
+}
+
+.send-location-btn{
+    font-size: 0.8rem;
+}
+
+.map-overlay{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px;
+    max-height: 100px;
+    max-width: 100px;
+    position: absolute;
+    z-index: 1000;
+    top: 15px;
+    right: 15px;
+    margin: 5px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.map-parent{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }

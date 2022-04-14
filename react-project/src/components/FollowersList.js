@@ -24,9 +24,13 @@ function FollowersList() {
         setUserFollowers(response.data.data)
     }
 
+    const formatDate = (date) =>{
+        return date.split("T")[0];
+    }
+
     const listItems = userFollowers.map(follower =>
         <li key={follower.id}>
-            {follower.username} -> {follower.created_at}
+            {follower.username} -> {formatDate(follower.created_at)}
         </li>
     );
 
