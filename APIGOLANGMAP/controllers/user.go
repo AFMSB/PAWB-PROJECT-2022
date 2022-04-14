@@ -8,7 +8,7 @@ import (
 )
 
 func SearchUsersByUsername(c *gin.Context) {
-	username := c.Param("username")
+	username := c.Request.URL.Query().Get("username") //<---- here!
 
 	var users []model.User
 	services.Db.Select("id, username").Where("username LIKE ?", "%"+username+"%").Where("access_mode != -1").Find(&users)

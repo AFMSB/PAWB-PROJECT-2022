@@ -30,7 +30,7 @@ class SearchUsers extends Component {
         this.setState({ value: e.target.value });
     };
 
-    get renderMovies() {
+    get renderUsers() {
         let movies = <li className="sugestion-searchbar">Didnt find any users with that username</li>;
 
         if (this.state.users === "empty") {
@@ -65,7 +65,7 @@ class SearchUsers extends Component {
                             </svg>
                         </div>
                 </div>
-                {this.renderMovies}
+                {this.renderUsers}
             </div>
         );
     }

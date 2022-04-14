@@ -15,7 +15,9 @@ const login = (username, password) => {
         })
         .then((response) => {
             if (response.status === 200) {
-                localStorage.setItem("authToken", JSON.stringify(response.data.token));}
+                localStorage.setItem("authToken", JSON.stringify(response.data.token));
+                localStorage.setItem("username", JSON.stringify(response.data.username));
+            }
             return response.data;
         })
         .catch(error => {
@@ -26,7 +28,7 @@ const logout = () => {
     const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"','')}`}
     console.log(headers)
 
-    return axios.post(API_URL + "logout",{ hello: 'world' },{
+    return axios.post(API_URL + "logout",{
         headers: headers
     }).then((response) => {
         if(response.status===200){

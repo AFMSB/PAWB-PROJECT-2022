@@ -80,7 +80,7 @@ func main() {
 	user := router.Group("/api/v1/user")
 	user.Use(services.AuthorizationRequired())
 	{
-		user.GET("/:username", routes.SearchUsersByUsername)
+		user.GET("/search", routes.SearchUsersByUsername)
 	}
 
 	router.GET("/socket", routes.WebSocket)

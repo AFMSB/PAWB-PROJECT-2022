@@ -47,7 +47,7 @@ function FollowersList() {
 
     return (
         <div className="assoc-user-list-div">
-            <table className="table">
+            <table className="table table-striped">
                 <thead>
                 <tr>
                     <th scope="col">Id</th>
