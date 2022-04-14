@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
-import {truncStr} from "./utils";
+import {truncStr} from "../services/utils";
 
 function FollowersList() {
     const [userFollowers, setUserFollowers] = useState([])

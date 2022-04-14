@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { search, truncStr } from "./utils";
+import { search, truncStr } from "../services/utils";
 
 class SearchUsers extends Component {
     state = {
