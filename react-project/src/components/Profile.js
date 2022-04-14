@@ -1,15 +1,8 @@
 import FollowersList from "./FollowersList";
 import React from "react";
-import {MapContainer, TileLayer, Marker, Popup, Tooltip, Circle} from 'react-leaflet'
-import {Icon} from "leaflet";
 import SearchUsers from "./SearchUsers";
-
-const icon = new Icon({
-    iconUrl: "assets/pin.png",
-    iconSize: [35,35]
-})
-
-const center = [51.505, -0.09]
+import MapView from "./MapView";
+import data from "../assets/data.json";
 
 const Profile = () => {
     return (
@@ -39,16 +32,7 @@ const Profile = () => {
                 </div>
                 <div className="col-12 col-md-9 card profile-card">
                     <div className="card-body map-parent">
-                        <MapContainer center={center} zoom={13}>
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            <Marker position={center} icon={icon}>
-                                <Popup>Popup for Marker</Popup>
-                                <Tooltip>Tooltip for Marker</Tooltip>
-                            </Marker>
-                        </MapContainer>
+                        <MapView markers={data.markers}/>
                         <div className="bg-light map-overlay">
                             History
                         </div>

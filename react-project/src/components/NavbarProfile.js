@@ -20,7 +20,7 @@ const NavbarProfile = () => {
             <div className="dropdown text-lg-end d-flex justify-content-center" id="navbar-profile">
                 <a href="#" className="d-block link-dark text-decoration-none dropdown-toggle"
                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src={process.env.PUBLIC_URL + "assets/profile.png"} alt="mdo" width="32" height="32"
+                    <img src={process.env.PUBLIC_URL + "../assets/profile.png"} alt="mdo" width="32" height="32"
                          className="rounded-circle"/>
                 </a>
                 <ul className="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser1">

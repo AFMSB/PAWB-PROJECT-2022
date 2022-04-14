@@ -1,0 +1,67 @@
+{
+  "markers": [
+    {
+      "popup_text": "SEZ Berlin",
+      "geometry": [
+        52.527025,
+        13.446139
+      ]
+    },
+    {
+      "popup_text": "Huxley's Neue Welt",
+      "geometry": [
+        52.486319,
+        13.421437
+      ]
+    },
+    {
+      "popup_text": "Mensch Meier",
+      "geometry": [
+        52.535069,
+        13.452312
+      ]
+    },
+    {
+      "popup_text": "Zur Klappe",
+      "geometry": [
+        52.493039,
+        13.387248
+      ]
+    },
+    {
+      "popup_text": "OHM",
+      "geometry": [
+        52.510507,
+        13.42022
+      ]
+    },
+    {
+      "popup_text": "M-BIA",
+      "geometry": [
+        52.522437,
+        13.409063
+      ]
+    },
+    {
+      "popup_text": "Monster Ronson's Ichiban Karaoke",
+      "geometry": [
+        52.505188,
+        13.448437
+      ]
+    },
+    {
+      "popup_text": "Marooush Restaurant - Lounge - Bar - Club",
+      "geometry": [
+        52.500938,
+        13.321438
+      ]
+    },
+    {
+      "popup_text": "Kater Blau",
+      "geometry": [
+        52.512187,
+        13.425563
+      ]
+    }
+  ]
+}
