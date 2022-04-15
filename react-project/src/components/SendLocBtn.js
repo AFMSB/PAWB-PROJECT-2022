@@ -12,29 +12,31 @@ class SendLocBtn extends Component {
         }
     }
 
+    makePositionPost = () =>{
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"','')}`}
+        const lat = this.state.Latitude;
+        const long = this.state.Longitude;
+        if (lat != null && long != null){
+            axios.post(API_URL, {
+                "Latitude": lat,
+                "Longitude": long
+            }, {
+                headers: headers
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    }
+
     onClickHandler = async e => {
         if (navigator.geolocation) {
             await navigator.geolocation.getCurrentPosition(
                 position => this.setState({
                     Latitude: position.coords.latitude,
                     Longitude: position.coords.longitude
-                }),
+                }, () => {this.makePositionPost()}),
                 err => console.log(err)
             );
-
-            const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"','')}`}
-            const lat = this.state.Latitude;
-            const long = this.state.Longitude;
-            if (lat != null && long != null){
-                axios.post(API_URL, {
-                    "Latitude": lat,
-                    "Longitude": long
-                }, {
-                    headers: headers
-                }).catch(error => {
-                    console.log(error);
-                })
-            }
         } else {
             console.warn("Location Disabled");
         }

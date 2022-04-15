@@ -5,7 +5,6 @@ import MarkerPopup from './MarkerPopup';
 
 const Markers = (props) => {
     const { pins } = props;
-
     const markers = pins.map((marker, index) => (
         <Marker key={index} position={marker.geometry} icon={LocationIcon} >
             <MarkerPopup data={marker}/>
