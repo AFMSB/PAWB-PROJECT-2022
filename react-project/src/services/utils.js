@@ -5,8 +5,6 @@ import MarkerPopup from "../components/MarkerPopup";
 import React from "react";
 
 
-
-
 export const truncStr = (string, limit) => {
     return string.length > limit
         ? string
@@ -61,31 +59,36 @@ const makeRequestCreator = (auth = true) => {
 };
 
 export const getCentralGeoCoordinate = (array) => {
-    let x = 0;
-    let y = 0;
-    let z = 0;
+    console.log("AAAAAAAAAAAAA", array)
+    if (array.length > 0) {
+        let x = 0;
+        let y = 0;
+        let z = 0;
 
-    array.forEach(element => {
-            const latitude = element.geometry[0] * Math.PI / 180;
-            const longitude = element.geometry[1] * Math.PI / 180;
+        array.forEach(element => {
+                const latitude = element.geometry[0] * Math.PI / 180;
+                const longitude = element.geometry[1] * Math.PI / 180;
 
-            x += Math.cos(latitude) * Math.cos(longitude);
-            y += Math.cos(latitude) * Math.sin(longitude);
-            z += Math.sin(latitude);
-        }
-    )
+                x += Math.cos(latitude) * Math.cos(longitude);
+                y += Math.cos(latitude) * Math.sin(longitude);
+                z += Math.sin(latitude);
+            }
+        )
 
-    const total = array.length;
+        const total = array.length;
 
-    x = x / total;
-    y = y / total;
-    z = z / total;
+        x = x / total;
+        y = y / total;
+        z = z / total;
 
-    const centralLongitude = Math.atan2(y, x);
-    const centralSquareRoot = Math.sqrt(x * x + y * y);
-    const centralLatitude = Math.atan2(z, centralSquareRoot);
+        const centralLongitude = Math.atan2(y, x);
+        const centralSquareRoot = Math.sqrt(x * x + y * y);
+        const centralLatitude = Math.atan2(z, centralSquareRoot);
 
-    return {lat: centralLatitude * 180 / Math.PI, lng: centralLongitude * 180 / Math.PI};
+        let centerPoint = {lat: centralLatitude * 180 / Math.PI, lng: centralLongitude * 180 / Math.PI}
+        console.log("==> ", centerPoint)
+        return centerPoint;
+    } else return {lat: 39.557191, lng: -7.8536599} // Center of Portugal
 }
 
 
