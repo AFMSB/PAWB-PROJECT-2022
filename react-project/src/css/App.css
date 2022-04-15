@@ -60,7 +60,6 @@
 input[type=text] {
     position: relative;
     z-index: 0;
-    padding-right: 80px;
     width: 100%;
 }
 
@@ -83,7 +82,7 @@ input[type=text] {
     border-top-left-radius: 10px;
     background-color: #f8f8f8;
     padding-left: 0;
-    width: 19%;
+    width: 15.5%;
     z-index: 10;
 }
 
