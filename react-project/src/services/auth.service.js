@@ -17,6 +17,7 @@ const login = (username, password) => {
             if (response.status === 200) {
                 localStorage.setItem("authToken", JSON.stringify(response.data.token));
                 localStorage.setItem("username", JSON.stringify(response.data.username));
+                localStorage.setItem("access", JSON.stringify(response.data.access));
             }
             return response.data;
         })

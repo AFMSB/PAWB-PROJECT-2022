@@ -9,7 +9,8 @@ import Navbar from "./components/Navbar";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Profile from "./components/Profile";
 import Home from "./components/Home";
-
+import AdminDashboard from "./components/AdminDashboard";
+import AdminProtectedRoutes from "./AdminProtectedRoutes";
 
 
 function App() {
@@ -20,6 +21,9 @@ function App() {
                 <Route exact path='/' element={<Home/>}/>
                 <Route path="/sign-in" element={<Login/>}/>
                 <Route path="/sign-up" element={<Signup/>}/>
+                <Route element={<AdminProtectedRoutes/>}>
+                    <Route path="/dashboard" element={<AdminDashboard/>}/>
+                </Route>
                 <Route element={<ProtectedRoutes/>}>
                     <Route path="/profile" element={<Profile/>}/>
                 </Route>

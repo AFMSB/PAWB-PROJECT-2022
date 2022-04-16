@@ -4,7 +4,7 @@ import MapView from "./MapView";
 
 function Home() {
     const center = {
-        "popup_text": "Aliados, Porto",
+        "created_at": "Aliados, Porto",
         "geometry": [
             41.1486,
             -8.611

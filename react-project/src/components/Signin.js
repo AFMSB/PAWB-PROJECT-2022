@@ -38,7 +38,11 @@ const Login = () => {
         if (checkBtn.current.context._errors.length === 0) {
             AuthService.login(username, password).then(
                 () => {
-                    navigate("/profile");
+                    if (localStorage.getItem("access") === "-1") { // User is Admin
+                        navigate("/dashboard");
+                    } else {
+                        navigate("/profile");
+                    }
                     window.location.reload();
                 },
                 (error) => {

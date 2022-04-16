@@ -81,6 +81,8 @@ func main() {
 	user := router.Group("/api/v1/user")
 	user.Use(services.AuthorizationRequired())
 	{
+		user.GET("/", routes.GetAllUsers)
+		user.GET("/last-positions", routes.GetUsersLastLocation)
 		user.GET("/search", routes.SearchUsersByUsername)
 	}
 

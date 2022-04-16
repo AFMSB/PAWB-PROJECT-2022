@@ -28,7 +28,7 @@ const NavbarProfile = () => {
                     <li>
                         <hr className="dropdown-divider"/>
                     </li>
-                    <li><a className="dropdown-item" onClick={handleSignOut}>Sign Out</a></li>
+                    <li><a className="dropdown-item text-danger" onClick={handleSignOut}>Sign Out</a></li>
                 </ul>
             </div>
         )

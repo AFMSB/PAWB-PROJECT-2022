@@ -31,7 +31,6 @@ class Profile extends Component {
 
         console.log("^^^",markers)
         this.setState({ markers })
-
     }
 
 

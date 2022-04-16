@@ -3,9 +3,17 @@ import React, {Component} from "react";
 
 const NavbarLinks = () => {
     const isAuthenticated = localStorage.getItem("authToken");
-    if (isAuthenticated) {
+    const accessMode = localStorage.getItem("access")
+    if (isAuthenticated && accessMode === "-1") {  //Admin
+        return (<ul className="navbar-nav me-auto mb-2 mb-md-0">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">Dashboard</Link>
+                </li>
+            </ul>
+        );
+    }  if (isAuthenticated && accessMode === "1") { // User
         return (<ul className="navbar-nav me-auto mb-2 mb-md-0"/>);
-    }else{
+    } else{
         return (
             <ul className="navbar-nav me-auto mb-2 mb-md-0">
                 <li className="nav-item">

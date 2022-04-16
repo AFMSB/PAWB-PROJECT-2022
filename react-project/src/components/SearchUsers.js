@@ -77,7 +77,7 @@ class SearchUsers extends Component {
         return (
             <div>
                 <div className="d-flex">
-                    <input type="text" className="widgets-input" value={this.state.value} onChange={e => this.onChangeHandler(e)} placeholder="Type something to search"/>
+                    <input type="text" className="widgets-input" value={this.state.value} onChange={e => this.onChangeHandler(e)} placeholder="Search User to Add."/>
                 </div>
                 {this.renderUsers}
             </div>
