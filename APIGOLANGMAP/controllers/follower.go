@@ -21,6 +21,29 @@ func FetchAllFollowers(userID uint) []UserFollower {
 	return users
 }
 
+func FetchFollowingUsers(userID uint) []UserFollower {
+	var followingUsers []UserFollower
+	services.Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.follower_user_id = users.id").Where("followers.follower_user_id = ? and users.access_mode != -1 and followers.deleted_at is null", userID).Find(&followingUsers)
+	return followingUsers
+}
+
+func GetAllFollowingUsers(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+	followingUsers := FetchFollowingUsers(userID.(uint))
+
+	if len(followingUsers) <= 0 {
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!", "data": followingUsers})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": followingUsers})
+}
+
 func GetAllFollowers(c *gin.Context) {
 	userID, errAuth := c.Get("userid")
 
@@ -31,7 +54,7 @@ func GetAllFollowers(c *gin.Context) {
 	followers := FetchAllFollowers(userID.(uint))
 
 	if len(followers) <= 0 {
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!","data": followers})
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!", "data": followers})
 		return
 	}
 
