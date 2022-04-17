@@ -4,6 +4,7 @@ import SearchUsers from "./SearchUsers";
 import MapView from "./MapView";
 import SendLocBtn from "./SendLocBtn";
 import '../css/App.css';
+import {Link} from "react-router-dom";
 
 const API_URL = "http://localhost:3000/api/v1/position/";
 
@@ -156,9 +157,15 @@ class Profile extends Component {
                     <div className="col-12 col-md-9 card profile-card">
                         <div className="card-body map-parent">
                             <MapView markers={this.state.markers}/>
-                            <div className="bg-light map-overlay">
-                                History
-                            </div>
+                            {/*<div className="bg-light map-overlay">*/}
+                            {/*    History*/}
+                            {/*</div>*/}
+
+                            <select className="custom-select bg-light map-overlay">
+                                <option selected>My Location</option>
+                                <option value="1">Jorge é Nabo</option>
+                                <option value="1">André é o rei</option>
+                            </select>
                         </div>
                     </div>
                 </div>

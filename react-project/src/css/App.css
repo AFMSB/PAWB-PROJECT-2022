@@ -102,11 +102,11 @@ input[type=text] {
 }
 
 .map-overlay{
-    overflow: hidden;
+    /*overflow: hidden;*/
     text-overflow: ellipsis;
     padding: 5px;
     max-height: 100px;
-    max-width: 100px;
+    max-width: 120px;
     position: absolute;
     z-index: 1000;
     top: 15px;
@@ -199,7 +199,7 @@ input[type=text] {
     100% { transform: rotate(0deg) }
 }
 
-select {
+.card-header select {
     padding: 5px;
     border-radius: 3px;
     height: 35px;
