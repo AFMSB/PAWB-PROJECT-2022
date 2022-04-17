@@ -118,19 +118,24 @@ class Profile extends Component {
 
                 <div className="d-flex flex-wrap justify-content-between">
                     <div className="col-12 col-md-3 card mb-2 mb-sm-0">
-                        <div className="card-header ">
-                            <div className="form-check form-switch text-start">
-                                <input className="form-check-input" name="sos-switch" type="checkbox" role="switch"
-                                       id="flexSwitchCheckDefault"
-                                       onClick={() => this.changeSOSState()}/>
-                                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">SOS</label>
-                                <select className="text-center" id="alertSelector">
-                                    <option value="1">1 hour</option>
-                                    <option value="6">6 hours</option>
-                                    <option value="12">12 hours</option>
-                                    <option value="24">24 hours</option>
-                                    <option value="48">48 hours</option>
-                                </select>
+                        <div className="card-header">
+                            <div className="form-check form-switch d-flex align-items-center justify-content-between">
+                                <div>
+                                    <input className="form-check-input mb-1 me-2" name="sos-switch" type="checkbox" role="switch"
+                                           id="flexSwitchCheckDefault"
+                                           onClick={() => this.changeSOSState()}/>
+                                    <label className="form-check-label" htmlFor="flexSwitchCheckDefault">SOS</label>
+                                </div>
+                                <div>
+                                    <select className="text-center" id="alertSelector">
+                                        <option value="1">1 hour</option>
+                                        <option value="6">6 hours</option>
+                                        <option value="12">12 hours</option>
+                                        <option value="24">24 hours</option>
+                                        <option value="48">48 hours</option>
+                                    </select>
+                                </div>
+
                             </div>
 
                         </div>
