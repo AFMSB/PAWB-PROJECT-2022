@@ -103,14 +103,15 @@ input[type=text] {
 
 .map-overlay{
     /*overflow: hidden;*/
+    border-color: white;
     text-overflow: ellipsis;
     padding: 5px;
     max-height: 100px;
     max-width: 120px;
     position: absolute;
     z-index: 1000;
-    top: 15px;
-    right: 15px;
+    top: 20px;
+    right: 20px;
     margin: 5px;
     border-radius: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
