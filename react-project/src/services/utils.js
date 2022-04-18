@@ -59,7 +59,6 @@ const makeRequestCreator = (auth = true) => {
 };
 
 export const getCentralGeoCoordinate = (array) => {
-    console.log("AAAAAAAAAAAAA", array)
     if (array.length > 0) {
         let x = 0;
         let y = 0;
@@ -86,7 +85,6 @@ export const getCentralGeoCoordinate = (array) => {
         const centralLatitude = Math.atan2(z, centralSquareRoot);
 
         let centerPoint = {lat: centralLatitude * 180 / Math.PI, lng: centralLongitude * 180 / Math.PI}
-        console.log("==> ", centerPoint)
         return centerPoint;
     } else return {lat: 39.557191, lng: -7.8536599} // Center of Portugal
 }

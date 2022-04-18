@@ -53,3 +53,8 @@ func ChangeSOSState(c *gin.Context) {
 func GetUserInfo(c *gin.Context) {
 	controllers.GetUserInfo(c)
 }
+
+// TODO swagger
+func GetAlertTime(c *gin.Context) {
+	controllers.GetAlertTime(c)
+}
