@@ -111,3 +111,21 @@ func ChangeSOSState(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "SOS State Changed!", "sos": user.SOS})
 	return
 }
+
+func GetAlertTime(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
+	var user model.User
+	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Not Found."})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "User AlertTime!", "AlertTime": user.AlertTime})
+	return
+}

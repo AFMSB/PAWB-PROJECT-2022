@@ -4,11 +4,8 @@ import SearchUsers from "./SearchUsers";
 import MapView from "./MapView";
 import SendLocBtn from "./SendLocBtn";
 import '../css/App.css';
-import {Link} from "react-router-dom";
 
 const API_URL = "http://localhost:3000/api/v1/position/";
-
-
 
 
 class Profile extends Component {
@@ -78,37 +75,54 @@ class Profile extends Component {
         }
     }
 
+    async getAlertTime() {
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
+
+        const requestOptions = {
+            method: 'GET',
+            headers: headers
+        };
+        const response = await fetch("http://localhost:3000/api/v1/user/alert-time", requestOptions);
+        const data = await response.json();
+        if (data.status === 200) {
+            this.setState({
+                alertTime: data.AlertTime
+            }, () => {
+                document.querySelector('select[id="alertSelector"]').value = this.state.alertTime
+            })
+        }
+    }
+
+    async updateAlertTime() {
+        const activities = document.querySelector("#alertSelector");
+        const optionsAvailable = ["1", "6", "12", "24", "48"];
+        if(optionsAvailable.indexOf(activities.value) !== -1)
+        {
+
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
+        const requestOptions = {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({"AlertTime": parseInt(activities.value)})
+        };
+        const response = await fetch("http://localhost:3000/api/v1/alert/time", requestOptions);
+        const data = await response.json();
+        if (data.status === 201) {
+            console.log(data)
+            this.setState({
+                alertTime : data.alertTime
+            }, () => {
+                // Se descomentado -> alerTime fica vazio depois de updated -> corrigir
+                //document.querySelector('select[id="alertSelector"]').value = this.state.alertTime
+            })
+        }
+        }
+    }
+
     async componentDidMount() {
         await this.getUserLocationsHistory()
         await this.getSOSState()
-
-        const activities = document.getElementById("alertSelector");
-        const optionsAvailable = ["1", "6", "12", "24", "48"];
-
-        activities.addEventListener("change", function() {
-            if(optionsAvailable.indexOf(activities.value) !== -1)
-            {
-                updateAlertTime();
-            }
-        });
-
-        async function updateAlertTime() {
-            const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-            const requestOptions = {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify({"AlertTime": parseInt(activities.value)})
-            };
-            const response = await fetch("http://localhost:3000/api/v1/alert/time", requestOptions);
-            const data = await response.json();
-            if (data.status === 201) {
-                this.setState({
-                    alertTime : activities.value
-                }, () => {
-                    // Set option as selected // Maybe needs a getAlertTimeState on componentDidMount
-                })
-            }
-        }
+        await this.getAlertTime()
     }
 
 
@@ -128,7 +142,7 @@ class Profile extends Component {
                                     <label className="form-check-label" htmlFor="flexSwitchCheckDefault">SOS</label>
                                 </div>
                                 <div>
-                                    <select className="text-center" id="alertSelector">
+                                    <select className="text-center" id="alertSelector" defaultValue={'1'} onChange={() => this.updateAlertTime()}>
                                         <option value="1">1 hour</option>
                                         <option value="6">6 hours</option>
                                         <option value="12">12 hours</option>
@@ -161,10 +175,10 @@ class Profile extends Component {
                             {/*    History*/}
                             {/*</div>*/}
 
-                            <select className="custom-select bg-light map-overlay">
-                                <option selected>My Location</option>
-                                <option value="1">Jorge é Nabo</option>
-                                <option value="1">André é o rei</option>
+                            <select className="custom-select bg-light map-overlay" defaultValue={"DEFAULT"}>
+                                <option defaultValue="DEFAULT">Locations</option>
+                                <option value="myLocs">My Locations</option>
+                                <option value="user1Locs">User Locations</option>
                             </select>
                         </div>
                     </div>

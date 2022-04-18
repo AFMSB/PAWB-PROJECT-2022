@@ -87,6 +87,7 @@ func main() {
 		user.GET("/last-positions", routes.GetUsersLastLocation)
 		user.GET("/search", routes.SearchUsersByUsername)
 		user.POST("/sos", routes.ChangeSOSState)
+		user.GET("/alert-time", routes.GetAlertTime)
 	}
 
 	router.GET("/socket", routes.WebSocket)
