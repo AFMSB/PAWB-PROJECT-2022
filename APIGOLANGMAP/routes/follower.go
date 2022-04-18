@@ -61,3 +61,8 @@ func AssociateFollower(c *gin.Context) {
 func DeassociateFollower(c *gin.Context) {
 	controllers.DeassociateFollower(c)
 }
+
+// TODO
+func GetFollowerLocationsHistory(c *gin.Context) {
+	controllers.GetFollowerLocationsHistory(c)
+}

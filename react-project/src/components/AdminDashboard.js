@@ -60,7 +60,7 @@ class AdminDashboard extends Component {
 
                 <div className="col-12 col-md-12 card mt-2">
                     <div className="card-body map-parent">
-                        <MapView markers={[]}/>
+                        <MapView markers={[]} zoom={5}/>
                         <div className="bg-light map-overlay">
                             Users Last Locations
                         </div>

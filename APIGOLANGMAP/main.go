@@ -48,6 +48,7 @@ func main() {
 	{
 		follower.GET("/", routes.GetAllFollowers)
 		follower.GET("/following", routes.GetAllFollowingUsers)
+		follower.POST("/history", routes.GetFollowerLocationsHistory)
 		follower.POST("/assoc", routes.AssociateFollower)
 		follower.POST("/deassoc", routes.DeassociateFollower)
 	}

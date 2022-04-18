@@ -5,6 +5,7 @@ import MapView from "./MapView";
 import SendLocBtn from "./SendLocBtn";
 import '../css/App.css';
 import {getCentralGeoCoordinate} from "../services/utils";
+import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/v1/position/";
 
@@ -28,6 +29,27 @@ class Profile extends Component {
             body: JSON.stringify({"start": "0", "end": "0"})
         };
         const response = await fetch(API_URL + "history", requestOptions);
+        const data = await response.json();
+        let markers = await Promise.all(data.locations.map(async (marker) => {
+            return {
+                created_at: marker.CreatedAt.split("T")[0],
+                geometry: [marker.Latitude, marker.Longitude]
+            }
+        }));
+        this.setState({
+            markers: markers
+        })
+    }
+
+    async getFollowerLocationsHistory(followerID) {
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
+
+        const requestOptions = {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({"location":{"start": "0", "end": "0"}, "followerID":parseInt(followerID)})
+        };
+        const response = await fetch("http://localhost:3000/api/v1/follower/history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             return {
@@ -107,7 +129,6 @@ class Profile extends Component {
             const response = await fetch("http://localhost:3000/api/v1/alert/time", requestOptions);
             const data = await response.json();
             if (data.status === 201) {
-                console.log(data)
                 this.setState({
                     alertTime: data.alertTime
                 }, () => {
@@ -118,10 +139,44 @@ class Profile extends Component {
         }
     }
 
+    async getUserFollowers() {
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
+
+        const requestOptions = {
+            method: 'GET',
+            headers: headers
+        };
+        const response = await fetch("http://localhost:3000/api/v1/follower/following", requestOptions);
+        const data = await response.json();
+        if (data.status === 200) {
+            const select = document.getElementById('mapSelector');
+            console.log(data.data)
+            for (let i = 0; i<=data.data.length; i++){
+                const opt = document.createElement('option');
+                opt.value = 'followerLocs'
+                opt.id = data.data[i].id;
+                opt.innerHTML = data.data[i].username + ' Locations';
+                select.appendChild(opt);
+            }
+        }
+    }
+
+    async updateMap() {
+        const select = document.getElementById('mapSelector');
+        const value = select.options[select.selectedIndex].value;
+        const id = select.options[select.selectedIndex].id;
+        if (value === "myLocs") {
+            await this.getUserLocationsHistory()
+        } else if (value === "followerLocs") {
+            await this.getFollowerLocationsHistory(id)
+        }
+    }
+
     async componentDidMount() {
         await this.getUserLocationsHistory()
         await this.getSOSState()
         await this.getAlertTime()
+        await this.getUserFollowers()
     }
 
 
@@ -130,7 +185,7 @@ class Profile extends Component {
             <div className="container mt-3">
 
                 <div className="d-flex flex-wrap justify-content-between">
-                    <div className="col-12 col-md-3 card mb-2 mb-sm-0">
+                    <div className="col-12 col-md-3 card mb-2 mb-sm-2 mb-md-0">
                         <div className="card-header">
                             <div className="form-check form-switch d-flex align-items-center justify-content-between">
                                 <div>
@@ -175,11 +230,10 @@ class Profile extends Component {
                             {/*<div className="bg-light map-overlay">*/}
                             {/*    History*/}
                             {/*</div>*/}
-
-                            <select className="custom-select bg-light map-overlay" defaultValue={"DEFAULT"}>
-                                <option defaultValue="DEFAULT">Locations</option>
+                            <select className="custom-select bg-light map-overlay" id="mapSelector"
+                                    defaultValue={"myLocs"}
+                                    onChange={() => this.updateMap()}>
                                 <option value="myLocs">My Locations</option>
-                                <option value="user1Locs">User Locations</option>
                             </select>
                         </div>
                     </div>
