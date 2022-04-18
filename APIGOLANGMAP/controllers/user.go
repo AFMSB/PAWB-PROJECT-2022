@@ -73,3 +73,41 @@ func GetUsersLastLocation(c *gin.Context) {
 	return
 
 }
+
+func GetUserInfo(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
+	var user model.User
+	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Not Found."})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "User Information", "user": user})
+	return
+}
+
+func ChangeSOSState(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
+	var user model.User
+	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Not Found."})
+		return
+	}
+
+	user.SOS = !user.SOS
+	services.Db.Save(&user)
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "SOS State Changed!", "sos": user.SOS})
+	return
+}

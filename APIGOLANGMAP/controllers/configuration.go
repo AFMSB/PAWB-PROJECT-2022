@@ -9,20 +9,29 @@ import (
 )
 
 func UpdateAlertTime(c *gin.Context) {
-	var user model.User
+	userID, errAuth := c.Get("userid")
 
-	id := c.Param("id")
-	services.Db.First(&user, id)
-
-	if user.ID == 0 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "User not found!"})
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
 		return
 	}
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var user model.User
+	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Not Found."})
+		return
+	}
+
+	type Alert struct {
+		AlertTime int
+	}
+	var AlertTime Alert
+	if err := c.ShouldBindJSON(&AlertTime); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check request!"})
 		return
 	}
+
+	user.AlertTime = AlertTime.AlertTime
 
 	if user.InvalidAlertTime() {
 		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Alert time is not acceptable!"})
@@ -32,7 +41,7 @@ func UpdateAlertTime(c *gin.Context) {
 	result := services.Db.Save(user)
 
 	if result.RowsAffected != 0 {
-		c.JSON(http.StatusCreated, gin.H{"status": http.StatusOK, "message": "Success!", "User ID": user.ID})
+		c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Success!", "User ID": user.ID, "AlertTime": user.AlertTime})
 		return
 	}
 
