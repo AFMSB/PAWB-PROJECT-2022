@@ -26,22 +26,22 @@ const login = (username, password) => {
             console.log(error);
         });
 };
-const logout = () => {
+const logout = async () => {
     const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-
-    return axios.post(API_URL + "logout", {
+    const requestOptions = {
+        method: 'POST',
         headers: headers
-    }).then((response) => {
-        console.log(response)
+    };
+    const response = await fetch(API_URL + "logout", requestOptions);
+    const data = await response.json();
+    if (data.status === 200) {
         localStorage.removeItem("authToken");
         localStorage.removeItem("access");
         localStorage.removeItem("username");
         return response.data;
-    }).catch(error => {
-        console.log(error);
-    });
-
+    }
 };
+
 const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem("user"));
 };
