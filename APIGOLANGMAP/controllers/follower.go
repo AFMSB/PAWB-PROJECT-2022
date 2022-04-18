@@ -16,14 +16,14 @@ type UserFollower struct {
 
 func FetchAllFollowers(userID uint) []UserFollower {
 	var users []UserFollower
-	services.Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.follower_user_id = users.id").Where("followers.user_id = ? and followers.deleted_at is null", userID).Find(&users)
+	services.Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.follower_user_id = users.id").Where("followers.user_id = ?  and users.access_mode != -1 and followers.deleted_at is null", userID).Find(&users)
 
 	return users
 }
 
 func FetchFollowingUsers(userID uint) []UserFollower {
 	var followingUsers []UserFollower
-	services.Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.follower_user_id = users.id").Where("followers.follower_user_id = ? and users.access_mode != -1 and followers.deleted_at is null", userID).Find(&followingUsers)
+	services.Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.user_id = users.id").Where("followers.follower_user_id = ? and users.access_mode != -1 and followers.deleted_at is null", userID).Find(&followingUsers)
 	return followingUsers
 }
 
