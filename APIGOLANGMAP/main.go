@@ -87,7 +87,7 @@ func main() {
 		user.GET("/search", routes.SearchUsersByUsername)
 	}
 
-	router.GET("/socket", routes.WebSocket)
+    router.GET("/socket", routes.WebSocket)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
 
