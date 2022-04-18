@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const API_URL = "http://localhost:3000/api/v1/auth/";
 const register = (username, password, confirmPassword) => {
     return axios.post(API_URL + "register", {
@@ -26,15 +27,15 @@ const login = (username, password) => {
         });
 };
 const logout = () => {
-    const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"','')}`}
-    console.log(headers)
+    const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
 
-    return axios.post(API_URL + "logout",{
+    return axios.post(API_URL + "logout", {
         headers: headers
     }).then((response) => {
-        if(response.status===200){
-            localStorage.removeItem("authToken");
-        }
+        console.log(response)
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("access");
+        localStorage.removeItem("username");
         return response.data;
     }).catch(error => {
         console.log(error);

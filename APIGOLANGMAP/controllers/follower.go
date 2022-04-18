@@ -124,3 +124,72 @@ func DeassociateFollower(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Deassociation Successful!"})
 
 }
+
+func verifyUserIsFollowing(userID uint, followerUserID uint) bool {
+	followingUsers := FetchFollowingUsers(userID)
+	for i := 0; i < len(followingUsers); i++ {
+		if followerUserID == followingUsers[i].Id {
+			return true
+		}
+	}
+	return false
+}
+
+func GetFollowerLocationsHistory(c *gin.Context) {
+	type FollowerLocation struct {
+		Location   Location `json:"location" binding:"required"`
+		FollowerID int      `json:"followerID" binding:"required"`
+	}
+
+	userID, errAuth := c.Get("userid")
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
+	var followerLocation FollowerLocation
+	if err := c.ShouldBindJSON(&followerLocation); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check Syntax!"})
+		return
+	}
+
+	var followerUser model.User
+	if err := services.Db.Where("id = ?", followerLocation.FollowerID).First(&followerUser).Error; err != nil {
+
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Follower User ID Not Found"})
+		return
+	}
+
+	if !verifyUserIsFollowing(userID.(uint), followerUser.ID) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "User not authorized to check given User locations."})
+		return
+	}
+
+	var startDate, errStart = ValidateDate(followerLocation.Location.Start)
+	var endDate, errEnd = ValidateDate(followerLocation.Location.End)
+
+	var positions []model.Position
+	// Datas invalidas retorna todas as posições do utilizador
+	if errStart != nil || errEnd != nil {
+		if err := services.Db.Where("user_id = ?", followerUser.ID).Order("created_at DESC").Find(&positions).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "extra": "Invalid date, showing all locations", "message": "My Locations History", "locations": positions})
+		return
+	}
+
+	// Retorna as localizações entre datas caso as datas do body estejam formatadas corretamente
+	if startDate.Before(endDate) != true {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "End Date Must Occur After Start Date"})
+		return
+	}
+
+	if err := services.Db.Where("user_id = ? AND created_at > ? AND created_at < ?", followerUser.ID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "My Locations History Filtered", "locations": positions})
+	return
+}

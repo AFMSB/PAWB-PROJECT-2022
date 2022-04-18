@@ -43,13 +43,13 @@ class Profile extends Component {
 
     async getFollowerLocationsHistory(followerID) {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-        /*
+
         const requestOptions = {
-            method: 'GET',
+            method: 'POST',
             headers: headers,
-            body: JSON.stringify({"start": "0", "end": "0"})
+            body: JSON.stringify({"location":{"start": "0", "end": "0"}, "followerID":parseInt(followerID)})
         };
-        const response = await fetch(API_URL + "history", requestOptions);
+        const response = await fetch("http://localhost:3000/api/v1/follower/history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             return {
@@ -59,7 +59,7 @@ class Profile extends Component {
         }));
         this.setState({
             markers: markers
-        })*/
+        })
     }
 
     async getSOSState() {
@@ -129,7 +129,6 @@ class Profile extends Component {
             const response = await fetch("http://localhost:3000/api/v1/alert/time", requestOptions);
             const data = await response.json();
             if (data.status === 201) {
-                console.log(data)
                 this.setState({
                     alertTime: data.alertTime
                 }, () => {
@@ -166,13 +165,9 @@ class Profile extends Component {
         const select = document.getElementById('mapSelector');
         const value = select.options[select.selectedIndex].value;
         const id = select.options[select.selectedIndex].id;
-        console.log(value);
-        console.log(value.split('_'));
         if (value === "myLocs") {
-            console.log("Display User Locations History")
             await this.getUserLocationsHistory()
         } else if (value === "followerLocs") {
-            console.log("Display Follower Locations History", id)
             await this.getFollowerLocationsHistory(id)
         }
     }
@@ -190,7 +185,7 @@ class Profile extends Component {
             <div className="container mt-3">
 
                 <div className="d-flex flex-wrap justify-content-between">
-                    <div className="col-12 col-md-3 card mb-2 mb-sm-0">
+                    <div className="col-12 col-md-3 card mb-2 mb-sm-2 mb-md-0">
                         <div className="card-header">
                             <div className="form-check form-switch d-flex align-items-center justify-content-between">
                                 <div>

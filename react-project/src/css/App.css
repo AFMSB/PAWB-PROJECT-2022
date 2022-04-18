@@ -158,19 +158,19 @@ input[type=text] {
     z-index: 10000 !important;
 }
 
-.form-check-input:checked {
+.card-header .form-check-input:checked {
     background-color: #c91d1d;
     border-color: pink;
 }
-.form-check-input:hover {
+.card-header .form-check-input:hover {
     background-color: #c91d1d;
     border-color: pink;
 }
 
-.form-switch .form-check-input {
+.card-header .form-switch .form-check-input {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='red'/%3e%3c/svg%3e");
 }
-.form-switch .form-check-input:focus {
+.card-header .form-switch .form-check-input:focus {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='pink'/%3e%3c/svg%3e");
 }
 
