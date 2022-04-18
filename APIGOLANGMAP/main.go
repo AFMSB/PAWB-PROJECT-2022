@@ -55,7 +55,7 @@ func main() {
 	alertTime := router.Group("/api/v1/alert")
 	alertTime.Use(services.AuthorizationRequired())
 	{
-		alertTime.PUT("/time/", routes.UpdateAlertTime)
+		alertTime.PUT("/time", routes.UpdateAlertTime)
 
 	}
 
@@ -83,8 +83,10 @@ func main() {
 	user.Use(services.AuthorizationRequired())
 	{
 		user.GET("/", routes.GetAllUsers)
+		user.GET("/info", routes.GetUserInfo)
 		user.GET("/last-positions", routes.GetUsersLastLocation)
 		user.GET("/search", routes.SearchUsersByUsername)
+		user.POST("/sos", routes.ChangeSOSState)
 	}
 
     router.GET("/socket", routes.WebSocket)

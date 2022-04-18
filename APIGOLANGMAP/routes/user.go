@@ -43,3 +43,13 @@ func GetAllUsers(c *gin.Context) {
 func GetUsersLastLocation(c *gin.Context) {
 	controllers.GetUsersLastLocation(c)
 }
+
+// TODO swagger
+func ChangeSOSState(c *gin.Context) {
+	controllers.ChangeSOSState(c)
+}
+
+// TODO swagger
+func GetUserInfo(c *gin.Context) {
+	controllers.GetUserInfo(c)
+}
