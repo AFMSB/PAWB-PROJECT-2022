@@ -10,10 +10,17 @@ import (
 )
 
 func SearchUsersByUsername(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
 	username := c.Request.URL.Query().Get("username") //<---- here!
 
 	var users []model.User
-	services.Db.Select("id, username").Where("username LIKE ?", "%"+username+"%").Where("access_mode != -1").Find(&users)
+	services.Db.Select("id, username").Where("username ILIKE ?", "%"+username+"%").Where("id != ?", userID).Where("access_mode != -1").Find(&users)
 
 	if len(users) <= 0 {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!"})
