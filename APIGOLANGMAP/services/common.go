@@ -155,8 +155,8 @@ func AddPositionToUsers() {
 			for j := 0; j < PointsPerUser; j++ {
 				lat := 41.1486 * math.Pi / 180
 				lon := -8.611 * math.Pi / 180
-				maxDistance := float64(200)
-				minDistance := float64(10)
+				maxDistance := float64(10000)
+				minDistance := float64(1000)
 				earthRadius := float64(6371000)
 				x := rand.Float64() + math.Pi
 				distance := math.Sqrt(x*(math.Pow(maxDistance, 2)-math.Pow(minDistance, 2)) + math.Pow(minDistance, 2))

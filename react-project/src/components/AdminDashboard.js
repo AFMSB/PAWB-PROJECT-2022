@@ -2,13 +2,16 @@ import React, {Component} from "react";
 import UsersList from "./UsersList";
 import UsersLastLocation from "./UsersLastLocation";
 import '../css/App.css';
-import SendLocBtn from "./SendLocBtn";
 import MapView from "./MapView";
 
 class AdminDashboard extends Component {
     constructor(props) {
         super(props)
     }
+
+
+
+
 
     render() {
         return (

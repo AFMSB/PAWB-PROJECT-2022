@@ -32,6 +32,7 @@ class Profile extends Component {
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             return {
+                user_id: marker.UserId,
                 created_at: marker.CreatedAt.split("T")[0],
                 geometry: [marker.Latitude, marker.Longitude]
             }
@@ -53,6 +54,7 @@ class Profile extends Component {
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             return {
+                user_id: marker.UserId,
                 created_at: marker.CreatedAt.split("T")[0],
                 geometry: [marker.Latitude, marker.Longitude]
             }
@@ -227,9 +229,11 @@ class Profile extends Component {
                         <div className="card-body map-parent">
                             <MapView markers={this.state.markers} zoom={12}
                                      center={getCentralGeoCoordinate(this.state.markers)}/>
-                            {/*<div className="bg-light map-overlay">*/}
-                            {/*    History*/}
-                            {/*</div>*/}
+
+                            <input className="custom-select bg-light map-overlay"
+                                   type="date" id="start" name="trip-start"
+                                   value="2018-07-22"
+                                   min="2018-01-01" max="2018-12-31"/>
                             <select className="custom-select bg-light map-overlay" id="mapSelector"
                                     defaultValue={"myLocs"}
                                     onChange={() => this.updateMap()}>
