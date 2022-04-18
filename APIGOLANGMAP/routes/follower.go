@@ -19,6 +19,19 @@ func GetAllFollowers(c *gin.Context) {
 	controllers.GetAllFollowers(c)
 }
 
+// @Summary Obtem os users que estamos a seguir
+// @Description Exibe a lista, sem todos os campos, de todos os users que estamos a seguir
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Success 200 {array} model.Follower
+// @Router /follower [get]
+// @Failure 404 "Not found"
+func GetAllFollowingUsers(c *gin.Context) {
+	controllers.GetAllFollowingUsers(c)
+}
+
 // @Summary Associa um Follower(User) a um User
 // @Description Associa um Follower a um User
 // @Accept  json
