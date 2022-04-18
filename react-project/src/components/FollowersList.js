@@ -47,7 +47,7 @@ function FollowersList() {
     };
 
     const listItems = userFollowers.map(follower =>
-        <tr>
+        <tr key={follower.id}>
             <td>{follower.id}</td>
             <td>{truncStr(follower.username, 19)}</td>
             <td>{formatDate(follower.created_at)}</td>
