@@ -29,7 +29,7 @@ var upgrader = websocket.Upgrader{
 func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatalln("Error on websocket connection:", err.Error())
+		log.Fatalln("Error on websocketComponents connection:", err.Error())
 	}
 
 	keys := r.URL.Query()

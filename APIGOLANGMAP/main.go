@@ -5,6 +5,8 @@ import (
 	"APIGOLANGMAP/repository"
 	"APIGOLANGMAP/routes"
 	"APIGOLANGMAP/services"
+	"APIGOLANGMAP/websocket"
+	"flag"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -28,11 +30,11 @@ func init() {
 }
 
 func main() {
-	/*var (
+	var (
 		port = flag.String("p", ":9090", "set port")
 	)
 
-	websocket.Start(*port)*/
+	go websocket.Start(*port)
 
 	services.FormatSwagger()
 
