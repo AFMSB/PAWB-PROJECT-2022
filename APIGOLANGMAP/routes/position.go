@@ -86,3 +86,8 @@ func GetUsersLocationWithFilters(c *gin.Context) {
 func WebSocket(c *gin.Context) {
 	services.InitConnectionSocket(c)
 }
+
+// TODO
+func GetUserLocationsHistory(c *gin.Context) {
+	controllers.GetUserLocationsHistory(c)
+}

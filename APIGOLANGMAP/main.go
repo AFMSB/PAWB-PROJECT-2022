@@ -80,7 +80,7 @@ func main() {
 		position.POST("/", routes.RegisterLocation)
 		position.GET("/", routes.GetMyLocation)
 		position.POST("/history", routes.GetLocationHistory)
-
+		position.POST("/history/user", routes.GetUserLocationsHistory)
 		position.DELETE("/", routes.DeleteLocation)
 		position.POST("/filter", routes.GetUsersLocationWithFilters)
 

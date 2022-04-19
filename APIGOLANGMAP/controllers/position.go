@@ -4,7 +4,6 @@ import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/repository"
 	"APIGOLANGMAP/services"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -30,14 +29,12 @@ func RegisterLocation(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&position); err != nil {
-		fmt.Println(position)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": err.Error()})
 		return
 	}
 
 	position.UserID = userID.(uint)
 	if errStore := repo.StorePosition(&position); errStore != nil {
-		fmt.Println()
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": errStore.Error()})
 		return
 	}
@@ -197,4 +194,52 @@ func GenerateQuery(users_id []int, date []string) string {
 func ValidateDate(dateStr string) (time.Time, error) {
 	d, err := time.Parse("2006-01-02", dateStr)
 	return d, err
+}
+
+func GetUserLocationsHistory(c *gin.Context) {
+	type UserLocation struct {
+		Location Location `json:"location" binding:"required"`
+		UserID   int      `json:"userID" binding:"required"`
+	}
+
+	var userLoc UserLocation
+	var positions []model.Position
+
+	if err := c.ShouldBindJSON(&userLoc); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check Syntax!"})
+		return
+	}
+
+	var startDate, errStart = ValidateDate(userLoc.Location.Start)
+	var endDate, errEnd = ValidateDate(userLoc.Location.End)
+
+	// Datas invalidas retorna todas as posições do utilizador
+	if errStart != nil || errEnd != nil {
+		if err := services.Db.Where("user_id = ?", userLoc.UserID).Order("created_at DESC").Find(&positions).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "extra": "Invalid date, showing all locations", "message": "My Locations History", "locations": positions})
+		return
+	}
+
+	// Retorna as localizações entre datas caso as datas do body estejam formatadas corretamente
+	if startDate.Before(endDate) != true && !startDate.Equal(endDate) {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "End Date Must Occur After Start Date"})
+		return
+	}
+
+	if startDate.Equal(endDate) {
+		startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 00, 00, 01, 00, time.UTC)
+	}
+	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 23, 59, 59, 00, time.UTC)
+
+	if err := services.Db.Where("user_id = ? AND created_at >= ? AND created_at <= ?", userLoc.UserID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "My Locations History Filtered", "locations": positions})
+	return
+
 }

@@ -143,6 +143,9 @@ input[type=text] {
     position: relative;
 }
 
+.map-admin{
+    height: 450px;
+}
 .bi-trash {
     fill: red;
 }
