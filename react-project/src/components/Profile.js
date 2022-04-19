@@ -1,11 +1,8 @@
-import FollowersList from "./FollowersList";
 import React, {Component} from "react";
 import SearchUsers from "./SearchUsers";
 import MapView from "./MapView";
-import SendLocBtn from "./SendLocBtn";
 import '../css/App.css';
 import {getCentralGeoCoordinate} from "../services/utils";
-import axios from "axios";
 
 const API_URL = "http://localhost:3000/api/v1/position/";
 
@@ -16,17 +13,56 @@ class Profile extends Component {
         this.state = {
             markers: [],
             sos: false,
-            alertTime: 1
+            alertTime: 1,
+            Latitude: null,
+            Longitude: null,
         }
     }
 
+    async makePositionPost() {
+        const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
+        const lat = this.state.Latitude;
+        const long = this.state.Longitude;
+        if (lat != null && long != null) {
+
+            const requestOptions = {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({"Latitude": lat, "Longitude": long})
+            };
+            const response = await fetch(API_URL, requestOptions);
+            const data = await response.json();
+            console.log(data)
+            if (data.status === 200) {
+                await this.getUserLocationsHistory();
+            }
+        }
+    }
+
+    async onClickHandler() {
+        if (navigator.geolocation) {
+            await navigator.geolocation.getCurrentPosition(
+                position => this.setState({
+                    Latitude: position.coords.latitude,
+                    Longitude: position.coords.longitude
+                }, () => {
+                    this.makePositionPost()
+                }),
+                err => console.log(err)
+            );
+        } else {
+            console.warn("Location Disabled");
+        }
+    };
+
     async getUserLocationsHistory() {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-
+        const startDate = document.getElementById('start').value;
+        const endDate = document.getElementById('end').value;
         const requestOptions = {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({"start": "0", "end": "0"})
+            body: JSON.stringify({"start": startDate, "end": endDate})
         };
         const response = await fetch(API_URL + "history", requestOptions);
         const data = await response.json();
@@ -44,11 +80,13 @@ class Profile extends Component {
 
     async getFollowerLocationsHistory(followerID) {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-
+        const startDate = document.getElementById('start').value;
+        const endDate = document.getElementById('end').value;
         const requestOptions = {
             method: 'POST',
             headers: headers,
-            body: JSON.stringify({"location":{"start": "0", "end": "0"}, "followerID":parseInt(followerID)})
+            //body: JSON.stringify({"location":{"start": "0", "end": "0"}, "followerID":parseInt(followerID)})
+            body: JSON.stringify({"location": {"start": startDate, "end": endDate}, "followerID": parseInt(followerID)})
         };
         const response = await fetch("http://localhost:3000/api/v1/follower/history", requestOptions);
         const data = await response.json();
@@ -153,7 +191,7 @@ class Profile extends Component {
         if (data.status === 200) {
             const select = document.getElementById('mapSelector');
             console.log(data.data)
-            for (let i = 0; i<=data.data.length; i++){
+            for (let i = 0; i <= data.data.length; i++) {
                 const opt = document.createElement('option');
                 opt.value = 'followerLocs'
                 opt.id = data.data[i].id;
@@ -179,6 +217,7 @@ class Profile extends Component {
         await this.getSOSState()
         await this.getAlertTime()
         await this.getUserFollowers()
+
     }
 
 
@@ -219,7 +258,17 @@ class Profile extends Component {
                                     <h4>{localStorage.getItem("username").replaceAll('"', '')}</h4>
                                     <p className="text-secondary mb-1">UFP</p>
                                     <div>
-                                        {<SendLocBtn/>}
+                                        <button
+                                            className="btn btn-outline-warning m-2 send-location-btn"
+                                            onClick={e => this.onClickHandler(e)}
+                                        >Send Location
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor"
+                                                 className="bi bi-pin-angle ms-1" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -231,13 +280,15 @@ class Profile extends Component {
                                      center={getCentralGeoCoordinate(this.state.markers)}/>
                             <div className="map-overlay d-flex">
                                 <input className="custom-select map-overlay-input"
-                                       type="date" id="start" name="trip-start"
-                                       value="2018-07-22"
-                                       min="2018-01-01" max="2018-12-31"/>
+                                       type="date" id="start" name="start"
+                                       defaultValue={new Date().toISOString().slice(0, 10)}
+                                       min="2018-01-01" max={new Date().toISOString().slice(0, 10)}
+                                       onChange={() => this.updateMap()}/>
                                 <input className="custom-select map-overlay-input"
-                                       type="date" id="start" name="trip-start"
-                                       value="2018-07-22"
-                                       min="2018-01-01" max="2018-12-31"/>
+                                       type="date" id="end" name="end"
+                                       defaultValue={new Date().toISOString().slice(0, 10)}
+                                       min="2018-01-01" max={new Date().toISOString().slice(0, 10)}
+                                       onChange={() => this.updateMap()}/>
                                 <select className="custom-select bg-light map-overlay-input" id="mapSelector"
                                         defaultValue={"myLocs"}
                                         onChange={() => this.updateMap()}>
@@ -249,16 +300,7 @@ class Profile extends Component {
                     </div>
                 </div>
                 <div className="col-12 card mt-2">
-                    <div className="card-body">
-                        <div className="d-flex justify-content-end">
-                            {<SearchUsers/>}
-                        </div>
-
-                        <div className="d-flex flex-column align-items-center text-center">
-                            <h4 className="mt-3 mt-sm-0">Followers</h4>
-                            <FollowersList/>
-                        </div>
-                    </div>
+                    {<SearchUsers/>}
                 </div>
             </div>
         );

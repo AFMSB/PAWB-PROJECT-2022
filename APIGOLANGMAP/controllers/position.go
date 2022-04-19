@@ -4,6 +4,7 @@ import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/repository"
 	"APIGOLANGMAP/services"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -27,20 +28,21 @@ func RegisterLocation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
 		return
 	}
-	err := c.Bind(&position)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
-		return
 
+	if err := c.ShouldBindJSON(&position); err != nil {
+		fmt.Println(position)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": err.Error()})
+		return
 	}
+
 	position.UserID = userID.(uint)
 	if errStore := repo.StorePosition(&position); errStore != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		fmt.Println()
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": errStore.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"msg": "Position register with success!!",
-		"Position": position})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Position register with success!!", "location": position})
 	return
 }
 
@@ -89,12 +91,17 @@ func GetLocationHistory(c *gin.Context) {
 	}
 
 	// Retorna as localizações entre datas caso as datas do body estejam formatadas corretamente
-	if startDate.Before(endDate) != true {
+	if startDate.Before(endDate) != true && !startDate.Equal(endDate) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "End Date Must Occur After Start Date"})
 		return
 	}
 
-	if err := services.Db.Where("user_id = ? AND created_at > ? AND created_at < ?", userID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
+	if startDate.Equal(endDate) {
+		startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 00, 00, 01, 00, time.UTC)
+	}
+	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 23, 59, 59, 00, time.UTC)
+
+	if err := services.Db.Where("user_id = ? AND created_at >= ? AND created_at <= ?", userID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
 		return
 	}

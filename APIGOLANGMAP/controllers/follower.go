@@ -5,6 +5,7 @@ import (
 	"APIGOLANGMAP/services"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 type UserFollower struct {
@@ -180,12 +181,17 @@ func GetFollowerLocationsHistory(c *gin.Context) {
 	}
 
 	// Retorna as localizações entre datas caso as datas do body estejam formatadas corretamente
-	if startDate.Before(endDate) != true {
+	if startDate.Before(endDate) != true && !startDate.Equal(endDate) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "End Date Must Occur After Start Date"})
 		return
 	}
 
-	if err := services.Db.Where("user_id = ? AND created_at > ? AND created_at < ?", followerUser.ID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
+	if startDate.Equal(endDate) {
+		startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 00, 00, 01, 00, time.UTC)
+	}
+	endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 23, 59, 59, 00, time.UTC)
+
+	if err := services.Db.Where("user_id = ? AND created_at >= ? AND created_at <= ?", followerUser.ID, startDate, endDate).Order("created_at DESC").Find(&positions).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
 		return
 	}
