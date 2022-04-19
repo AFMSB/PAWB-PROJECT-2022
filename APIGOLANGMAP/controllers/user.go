@@ -20,7 +20,8 @@ func SearchUsersByUsername(c *gin.Context) {
 	username := c.Request.URL.Query().Get("username") //<---- here!
 
 	var users []model.User
-	services.Db.Select("id, username").Where("username ILIKE ?", "%"+username+"%").Where("id != ?", userID).Where("access_mode != -1").Find(&users)
+	//services.Db.Select("id, username").Where("username ILIKE ?", "%"+username+"%").Where("id != ?", userID).Where("access_mode != -1").Find(&users)
+	services.Db.Raw("SELECT * FROM users WHERE username ILIKE '%"+username+"%' and id not in (SELECT distinct follower_user_id FROM followers where user_id = ?) and id != ? and access_mode != -1", userID, userID).Scan(&users)
 
 	if len(users) <= 0 {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Empty list!"})
