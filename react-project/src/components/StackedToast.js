@@ -86,8 +86,7 @@ export class StackedToasts extends React.Component {
         let username = this.state.username
         let parsedMsg = JSON.parse(message);
         let splitedMsg = parsedMsg.body.split("|*_*|");
-        console.log("splitedMsg--->", splitedMsg);
-        if (splitedMsg.length < 0){
+        if (splitedMsg.length < 2){
             return this.state.messages.concat([JSON.parse(message)]);
         }
         let names = splitedMsg[0].split(",");
