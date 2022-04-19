@@ -3,6 +3,7 @@ import SearchUsers from "./SearchUsers";
 import MapView from "./MapView";
 import '../css/App.css';
 import {getCentralGeoCoordinate} from "../services/utils";
+import {StackedToasts} from "./StackedToast";
 
 const API_URL = "http://localhost:3000/api/v1/position/";
 
@@ -32,7 +33,6 @@ class Profile extends Component {
             };
             const response = await fetch(API_URL, requestOptions);
             const data = await response.json();
-            console.log(data)
             if (data.status === 200) {
                 await this.getUserLocationsHistory();
             }
@@ -190,7 +190,6 @@ class Profile extends Component {
         const data = await response.json();
         if (data.status === 200) {
             const select = document.getElementById('mapSelector');
-            console.log(data.data)
             for (let i = 0; i <= data.data.length; i++) {
                 const opt = document.createElement('option');
                 opt.value = 'followerLocs'
@@ -224,7 +223,7 @@ class Profile extends Component {
     render() {
         return (
             <div className="container mt-3">
-
+                <StackedToasts/>
                 <div className="d-flex flex-wrap justify-content-between">
                     <div className="col-12 col-md-3 card mb-2 mb-sm-2 mb-md-0">
                         <div className="card-header">
