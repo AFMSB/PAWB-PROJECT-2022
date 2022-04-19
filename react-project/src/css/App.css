@@ -51,8 +51,8 @@
     border: 0;
     -webkit-appearance: none;
     border-radius: 0 10px 10px 0;
-    background: linear-gradient(180deg,#6fc4ff 0,#4a9cd5 100%);
-    font-family: Ubuntu,serif;
+    background: linear-gradient(180deg, #6fc4ff 0, #4a9cd5 100%);
+    font-family: Ubuntu, serif;
     font-weight: 300;
     color: #fff;
 }
@@ -73,7 +73,7 @@ input[type=text] {
     max-height: 240px;
     overflow-y: auto;
     box-shadow: 5px 5px 10px 0 #c3c3c3;
-    position: absolute!important;
+    position: absolute !important;
     text-align: center;
     top: 56px;
     margin: 0;
@@ -93,15 +93,15 @@ input[type=text] {
 }
 
 
-.card-body{
+.card-body {
     height: 313px;
 }
 
-.send-location-btn{
+.send-location-btn {
     font-size: 0.8rem;
 }
 
-.map-overlay{
+.map-overlay {
     /*overflow: hidden;*/
     text-overflow: ellipsis;
     padding: 5px;
@@ -114,36 +114,36 @@ input[type=text] {
     flex-direction: column !important;
 }
 
-.map-overlay-input{
+.map-overlay-input {
     width: 100%;
-    margin-bottom: .25rem!important;
+    margin-bottom: .25rem !important;
     border-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 @media (min-width: 1000px) {
-    .map-overlay-input{
+    .map-overlay-input {
         width: unset;
-        margin-right: .25rem!important;
+        margin-right: .25rem !important;
     }
 }
 
 @media (min-width: 1000px) {
-    .map-overlay{
+    .map-overlay {
         max-width: 422px;
         flex-direction: row !important;
     }
 }
 
-.map-parent{
+.map-parent {
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 }
 
-.bi-trash{
+.bi-trash {
     fill: red;
 }
 
@@ -159,7 +159,7 @@ input[type=text] {
     background-color: #ffffff !important;
 }
 
-.accordion-button:link, .accordion-button:visited, .accordion-button:hover, .accordion-button:active  {
+.accordion-button:link, .accordion-button:visited, .accordion-button:hover, .accordion-button:active {
     background-color: #ffc107 !important;
     color: #000000 !important;
     text-decoration: none !important;
@@ -181,6 +181,7 @@ input[type=text] {
     background-color: #c91d1d;
     border-color: pink;
 }
+
 .card-header .form-check-input:hover {
     background-color: #c91d1d;
     border-color: pink;
@@ -189,34 +190,48 @@ input[type=text] {
 .card-header .form-switch .form-check-input {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='red'/%3e%3c/svg%3e");
 }
+
 .card-header .form-switch .form-check-input:focus {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='pink'/%3e%3c/svg%3e");
 }
 
 
-.notify-icon{
-    width: 25px;
-    height: 25px;
+.notify-icon {
     display: block;
     position: relative;
     background-position: center center;
+    animation: ring 1.6s linear infinite;
+    color: red;
 }
 
-.notify-icon:hover{
-    animation:ring 1.6s linear;
-}
-
-@keyframes ring
-{
-    0% { transform: rotate(0deg) }
-    5% { transform: rotate(0deg) }
-    15% { transform: rotate(0deg) }
-    25% { transform: rotate(20deg) }
-    35% { transform: rotate(-15deg) }
-    45% { transform: rotate(10deg) }
-    55% { transform: rotate(-5deg) }
-    60% { transform: rotate(0deg) }
-    100% { transform: rotate(0deg) }
+@keyframes ring {
+    0% {
+        transform: rotate(0deg)
+    }
+    5% {
+        transform: rotate(0deg)
+    }
+    15% {
+        transform: rotate(0deg)
+    }
+    25% {
+        transform: rotate(20deg)
+    }
+    35% {
+        transform: rotate(-15deg)
+    }
+    45% {
+        transform: rotate(10deg)
+    }
+    55% {
+        transform: rotate(-5deg)
+    }
+    60% {
+        transform: rotate(0deg)
+    }
+    100% {
+        transform: rotate(0deg)
+    }
 }
 
 .card-header select {
@@ -235,9 +250,17 @@ input[type=text] {
     background-position: right 5px top 50%;
 }
 
-.toast-container{
+.toast-container {
     position: absolute;
     z-index: 2000;
+}
+
+.toast {
+    -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein .5s; /* Firefox < 16 */
+    -ms-animation: fadein .5s; /* Internet Explorer */
+    -o-animation: fadein .5s; /* Opera < 12.1 */
+    animation: fadein .5s;
 }
 
 @media (min-width: 768px) {
@@ -246,10 +269,60 @@ input[type=text] {
     }
 }
 
-input{
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+input {
     text-align: center;
 }
 
-select .custom-select{
+select .custom-select {
     text-align: center;
 }
+

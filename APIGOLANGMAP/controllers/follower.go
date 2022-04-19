@@ -121,7 +121,8 @@ func DeassociateFollower(c *gin.Context) {
 		return
 	}
 
-	services.Db.Delete(&follower)
+	//services.Db.Delete(&follower)
+	services.Db.Exec("delete from followers where user_id = ? and follower_user_id = ?", follower.UserID, follower.FollowerUserID)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Deassociation Successful!"})
 
 }
