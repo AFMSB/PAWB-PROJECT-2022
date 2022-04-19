@@ -229,16 +229,22 @@ class Profile extends Component {
                         <div className="card-body map-parent">
                             <MapView markers={this.state.markers} zoom={12}
                                      center={getCentralGeoCoordinate(this.state.markers)}/>
+                            <div className="map-overlay d-flex">
+                                <input className="custom-select map-overlay-input"
+                                       type="date" id="start" name="trip-start"
+                                       value="2018-07-22"
+                                       min="2018-01-01" max="2018-12-31"/>
+                                <input className="custom-select map-overlay-input"
+                                       type="date" id="start" name="trip-start"
+                                       value="2018-07-22"
+                                       min="2018-01-01" max="2018-12-31"/>
+                                <select className="custom-select bg-light map-overlay-input" id="mapSelector"
+                                        defaultValue={"myLocs"}
+                                        onChange={() => this.updateMap()}>
+                                    <option value="myLocs">My Locations</option>
+                                </select>
+                            </div>
 
-                            <input className="custom-select bg-light map-overlay"
-                                   type="date" id="start" name="trip-start"
-                                   value="2018-07-22"
-                                   min="2018-01-01" max="2018-12-31"/>
-                            <select className="custom-select bg-light map-overlay" id="mapSelector"
-                                    defaultValue={"myLocs"}
-                                    onChange={() => this.updateMap()}>
-                                <option value="myLocs">My Locations</option>
-                            </select>
                         </div>
                     </div>
                 </div>

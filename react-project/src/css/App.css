@@ -103,18 +103,37 @@ input[type=text] {
 
 .map-overlay{
     /*overflow: hidden;*/
-    border-color: white;
     text-overflow: ellipsis;
     padding: 5px;
     max-height: 100px;
-    max-width: 120px;
+    max-width: 130px;
     position: absolute;
     z-index: 1000;
     top: 20px;
     right: 20px;
-    margin: 5px;
+    flex-direction: column !important;
+}
+
+.map-overlay-input{
+    width: 100%;
+    margin-bottom: .25rem!important;
+    border-color: white;
     border-radius: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+@media (min-width: 1000px) {
+    .map-overlay-input{
+        width: unset;
+        margin-right: .25rem!important;
+    }
+}
+
+@media (min-width: 1000px) {
+    .map-overlay{
+        max-width: 422px;
+        flex-direction: row !important;
+    }
 }
 
 .map-parent{
