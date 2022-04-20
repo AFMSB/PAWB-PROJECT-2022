@@ -16,7 +16,6 @@ func StartService() {
 }
 
 func securityConcurrent() {
-	fmt.Println("LAUNCH!!")
 	var results = make(map[string]interface{})
 	var positions, errGetAllPositions = repository.NewCrudPositions().GetAllPositions()
 	var users, errGetAllUsers = repository.NewCrudPositions().GetAllUsers()
@@ -45,19 +44,26 @@ func securityConcurrent() {
 			continue
 		}
 
-		if !currentUser.SOS && int(time.Now().Sub(timeLastUpdate).Hours()) < currentUser.AlertTime {
+		if int(time.Now().Sub(timeLastUpdate).Hours()) < currentUser.AlertTime {
 			continue
 		}
 		alertUser(uint(notifyUser))
 	}
 }
 
-func alertUser(user uint) {
-	var followers []model.Follower
-	Db.Where("user_id = ?", user).Find(&followers)
-	msg := fmt.Sprintf("Alert User %d maybe in Danger", user)
-	for _, follower := range followers {
-		Sender(follower.FollowerUserID, msg)
+func FetchAllFollowers(userID uint) []model.User {
+	var users []model.User
+	Db.Table("users").Select("users.id, users.username, followers.created_at, followers.updated_at").Joins("JOIN followers on followers.follower_user_id = users.id").Where("followers.user_id = ?  and users.access_mode != -1 and followers.deleted_at is null", userID).Find(&users)
+	return users
+}
 
-	}
+func alertUser(user uint) {
+	var u model.User
+	Db.First(&u, user)
+
+	followers := FetchAllFollowers(user)
+	fmt.Println(followers)
+
+	InitConnection()
+	SendMessage(followers, fmt.Sprintf("%s has not updated his location for more than %d hours, so he may be in danger", u.Username, u.AlertTime))
 }

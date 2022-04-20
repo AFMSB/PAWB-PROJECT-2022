@@ -144,7 +144,7 @@ func GetAllUsersUnderXKms(user model.User) ([]model.User, error) {
 
 	userLastLoc, err := FetchUserLastLocation(user.ID)
 	if err == nil {
-		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Latitude, userLastLoc.Longitude, 10000000).Scan(&users)
+		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Longitude, userLastLoc.Latitude, 30000).Scan(&users)
 	} else {
 		return users, err
 	}
@@ -162,14 +162,7 @@ func SendDangerZoneAlert2Followers(userID uint) {
 	var user model.User
 	services.Db.Find(&user, userID)
 	var followers, _ = GetAllUsersUnderXKms(user)
-	var usersStr string
-	for i, user := range followers {
-		if i != 0 {
-			usersStr += ","
-		}
-		usersStr += user.Username
-	}
 
 	services.InitConnection()
-	services.SendMessage(usersStr, "An SOS alert nearby was given by "+user.Username)
+	services.SendMessage(followers, "An SOS alert nearby was given by "+user.Username)
 }

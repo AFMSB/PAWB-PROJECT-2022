@@ -288,3 +288,7 @@ select .custom-select {
     text-align: center;
 }
 
+.bi-trash:hover{
+    fill: #9a0000;
+}
+

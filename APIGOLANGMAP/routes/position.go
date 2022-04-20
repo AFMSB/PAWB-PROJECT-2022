@@ -2,8 +2,6 @@ package routes
 
 import (
 	"APIGOLANGMAP/controllers"
-	"APIGOLANGMAP/services"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -77,14 +75,6 @@ func DeleteLocation(c *gin.Context) {
 // @Failure 400 "User Token Malformed"
 func GetUsersLocationWithFilters(c *gin.Context) {
 	controllers.GetUsersLocationWithFilters(c)
-}
-
-// @Success 200 "Connection confirm"
-// @Router /socket [get]
-// @Failure 404 "Connection failed"
-// @Failure 400 "User Token Malformed"
-func WebSocket(c *gin.Context) {
-	services.InitConnectionSocket(c)
 }
 
 // TODO

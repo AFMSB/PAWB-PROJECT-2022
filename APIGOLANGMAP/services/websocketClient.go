@@ -1,6 +1,7 @@
 package services
 
 import (
+	"APIGOLANGMAP/model"
 	"fmt"
 	"github.com/rgamba/evtwebsocket"
 	"log"
@@ -36,9 +37,17 @@ func InitConnection() {
 	}
 }
 
-func SendMessage(users string, message string) {
+func SendMessage(users []model.User, message string) {
+	var usersStr string
+	for i, user := range users {
+		if i != 0 {
+			usersStr += ","
+		}
+		usersStr += user.Username
+	}
+
 	msg := evtwebsocket.Msg{
-		Body: []byte(users + "|*_*|" + message),
+		Body: []byte(usersStr + "|*_*|" + message),
 	}
 	conn.Send(msg)
 }

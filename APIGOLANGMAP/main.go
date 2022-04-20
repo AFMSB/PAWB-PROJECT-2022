@@ -97,8 +97,6 @@ func main() {
 		user.GET("/alert-time", routes.GetAlertTime)
 	}
 
-	router.GET("/socket/:id", routes.WebSocket)
-
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")
 }

@@ -34,6 +34,7 @@ func RegisterLocation(c *gin.Context) {
 	}
 
 	position.UserID = userID.(uint)
+	position.CreatedAt = time.Now()
 	if errStore := repo.StorePosition(&position); errStore != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": errStore.Error()})
 		return

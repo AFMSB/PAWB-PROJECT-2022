@@ -51,7 +51,7 @@ func (p *PositionStruck) GetAllUsers() ([]model.User, error) {
 	var users []model.User
 
 	err := DB.Transaction(func(tx *gorm.DB) error {
-		result := tx.Find(&users)
+		result := tx.Where("access_mode != -1").Find(&users)
 		if result.Error != nil {
 			panic("ERROR GETTING the Positions")
 			return result.Error
