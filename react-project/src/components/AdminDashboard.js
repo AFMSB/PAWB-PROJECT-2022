@@ -24,7 +24,6 @@ class AdminDashboard extends Component {
         };
         const response = await fetch(API_URL + "last-positions", requestOptions);
         const data = await response.json();
-        console.log(data.userLocs)
         let markers = await Promise.all(data.userLocs.map(async (marker) => {
             return {
                 user_id: marker.UserID,

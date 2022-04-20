@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
-import {truncStr} from "../services/utils";
 
 const API_URL = "http://localhost:3000/api/v1/user/";
 

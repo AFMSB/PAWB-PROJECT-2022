@@ -80,7 +80,6 @@ class SearchUsers extends Component {
     async userLiClickHandler(e) {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
         const followerId = e.target.id;
-        console.log(this.state.userFollowers)
         if (followerId) {
             const requestOptions = {
                 method: 'POST',

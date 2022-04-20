@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {MapContainer, TileLayer} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import data from "../assets/data.json"
 import {getCentralGeoCoordinate} from "../services/utils";
 import Markers from './Markers';
 
