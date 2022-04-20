@@ -3,7 +3,6 @@ package controllers
 import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/services"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -65,7 +64,6 @@ func GetUsersLastLocation(c *gin.Context) {
 	for i, user := range users {
 		var position model.Position
 		var loc LastLocation
-		fmt.Print(i, user.ID, user.Username)
 		if err := services.Db.Where("user_id = ?", user.ID).Order("created_at DESC").First(&position).Error; err != nil {
 			//c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "User ID Not Found"})
 		} else {

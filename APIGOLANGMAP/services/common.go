@@ -2,7 +2,6 @@ package services
 
 import (
 	"APIGOLANGMAP/model"
-	"fmt"
 	"github.com/jaswdr/faker"
 	"golang.org/x/crypto/bcrypt"
 	postgres "gorm.io/driver/postgres"
@@ -171,7 +170,6 @@ func AddPositionToUsers() {
 				p.UserID = users[i].ID
 				p.Latitude = float32((lat + deltaLat) * 180 / math.Pi)
 				p.Longitude = float32((lon + deltaLon) * 180 / math.Pi)
-				fmt.Println(p)
 				if errGeoLocation := Db.Exec("INSERT INTO positions (latitude, longitude, user_id, geolocation,created_at,updated_at) VALUES (?,?,?,ST_SetSRID(ST_Point(?,?),4326)::geography,current_timestamp,current_timestamp)",
 					p.Latitude, p.Longitude, p.UserID, p.Latitude, p.Longitude).Error; errGeoLocation != nil {
 					log.Println("ERROR Inserting Default Position")
