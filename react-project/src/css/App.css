@@ -143,9 +143,10 @@ input[type=text] {
     position: relative;
 }
 
-.map-admin{
+.map-admin {
     height: 450px;
 }
+
 .bi-trash {
     fill: red;
 }
@@ -259,11 +260,16 @@ input[type=text] {
 }
 
 .toast {
-    -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: fadein .5s; /* Firefox < 16 */
-    -ms-animation: fadein .5s; /* Internet Explorer */
-    -o-animation: fadein .5s; /* Opera < 12.1 */
-    animation: fadein .5s;
+    animation: rightin .5s;
+}
+
+@keyframes rightin {
+    from {
+        transform: translateX(110%);
+    }
+    to {
+        transform: translateX(0%);
+    }
 }
 
 @media (min-width: 768px) {
