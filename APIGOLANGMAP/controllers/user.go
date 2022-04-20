@@ -3,7 +3,6 @@ package controllers
 import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/services"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -63,7 +62,6 @@ func GetUsersLastLocation(c *gin.Context) {
 	}
 
 	for _, user := range users {
-		fmt.Println("USER ->", user)
 		var position model.Position
 		var loc LastLocation
 		if err := services.Db.Where("user_id = ?", user.ID).Order("created_at DESC").First(&position).Error; err != nil {
@@ -171,8 +169,6 @@ func SendDangerZoneAlert2Followers(userID uint) {
 		}
 		usersStr += user.Username
 	}
-
-	//fmt.Println("users str ---->", usersStr)
 
 	services.InitConnection()
 	services.SendMessage(usersStr, "An SOS alert nearby was given by "+user.Username)
