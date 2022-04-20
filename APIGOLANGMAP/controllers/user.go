@@ -115,6 +115,9 @@ func ChangeSOSState(c *gin.Context) {
 	}
 
 	user.SOS = !user.SOS
+	if user.SOS == true {
+		SendDangerZoneAlert2Followers(userID.(uint))
+	}
 	services.Db.Save(&user)
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "SOS State Changed!", "sos": user.SOS})
 	return
@@ -136,4 +139,41 @@ func GetAlertTime(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "User AlertTime!", "AlertTime": user.AlertTime})
 	return
+}
+
+func GetAllUsersUnderXKms(user model.User) ([]model.User, error) {
+	var users []model.User
+
+	userLastLoc, err := FetchUserLastLocation(user.ID)
+	if err == nil {
+		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Latitude, userLastLoc.Longitude, 10000000).Scan(&users)
+	} else {
+		return users, err
+	}
+
+	return users, err
+}
+
+func FetchUserLastLocation(userID uint) (model.Position, error) {
+	var position model.Position
+	err := services.Db.Where("user_id = ?", userID).Order("created_at DESC").First(&position).Error
+	return position, err
+}
+
+func SendDangerZoneAlert2Followers(userID uint) {
+	var user model.User
+	services.Db.Find(&user, userID)
+	var followers, _ = GetAllUsersUnderXKms(user)
+	var usersStr string
+	for i, user := range followers {
+		if i != 0 {
+			usersStr += ","
+		}
+		usersStr += user.Username
+	}
+
+	//fmt.Println("users str ---->", usersStr)
+
+	services.InitConnection()
+	services.SendMessage(usersStr, "An SOS alert nearby was given by "+user.Username)
 }

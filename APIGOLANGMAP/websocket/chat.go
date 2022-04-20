@@ -11,10 +11,10 @@ import (
 )
 
 type Chat struct {
-	users    map[string]*UserChat
-	messages chan *Message
-	join     chan *UserChat
-	leave    chan *UserChat
+	Users    map[string]*UserChat
+	Messages chan *Message
+	Join     chan *UserChat
+	Leave    chan *UserChat
 }
 
 var upgrader = websocket.Upgrader{
@@ -25,6 +25,8 @@ var upgrader = websocket.Upgrader{
 		return r.Method == http.MethodGet
 	},
 }
+
+var ChatSingleton Chat
 
 func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -44,7 +46,7 @@ func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
 		Global:   c,
 	}
 
-	c.join <- user
+	c.Join <- user
 
 	user.Read()
 }
@@ -52,38 +54,39 @@ func (c *Chat) Handler(w http.ResponseWriter, r *http.Request) {
 func (c *Chat) Run() {
 	for {
 		select {
-		case user := <-c.join:
+		case user := <-c.Join:
 			c.add(user)
-		case message := <-c.messages:
+		case message := <-c.Messages:
 			c.broadcast(message)
-		case user := <-c.leave:
+		case user := <-c.Leave:
 			c.disconnect(user)
 		}
 	}
 }
 
 func (c *Chat) add(user *UserChat) {
-	if _, ok := c.users[user.Username]; !ok {
-		c.users[user.Username] = user
+	if _, ok := c.Users[user.Username]; !ok {
+		c.Users[user.Username] = user
 
-		body := fmt.Sprintf("%s join the chat", user.Username)
+		body := fmt.Sprintf("%s|*_*|Joined the Chat", user.Username)
 		c.broadcast(NewMessage(body, "Server"))
 	}
 }
 
 func (c *Chat) broadcast(message *Message) {
 	log.Printf("Broadcast message: %v\n", message)
-	for _, user := range c.users {
+	for _, user := range c.Users {
 		user.Write(message)
 	}
 }
 
 func (c *Chat) disconnect(user *UserChat) {
-	if _, ok := c.users[user.Username]; ok {
+	if _, ok := c.Users[user.Username]; ok {
 		defer user.Conn.Close()
-		delete(c.users, user.Username)
+		delete(c.Users, user.Username)
 
-		body := fmt.Sprintf("%s left the chat", user.Username)
+		body := fmt.Sprintf("%s|*_*|Left the Chat", user.Username)
+		fmt.Println("body disconnect ->", body)
 		c.broadcast(NewMessage(body, "Server"))
 	}
 }
@@ -92,16 +95,16 @@ func Start(port string) {
 
 	log.Printf("Chat listening on http://localhost%s\n", port)
 
-	c := &Chat{
-		users:    make(map[string]*UserChat),
-		messages: make(chan *Message),
-		join:     make(chan *UserChat),
-		leave:    make(chan *UserChat),
+	chatSingleton := &Chat{
+		Users:    make(map[string]*UserChat),
+		Messages: make(chan *Message),
+		Join:     make(chan *UserChat),
+		Leave:    make(chan *UserChat),
 	}
 
-	http.HandleFunc("/ws", c.Handler)
+	http.HandleFunc("/ws", chatSingleton.Handler)
 
-	go c.Run()
+	go chatSingleton.Run()
 
 	log.Fatal(http.ListenAndServe(port, nil))
 }

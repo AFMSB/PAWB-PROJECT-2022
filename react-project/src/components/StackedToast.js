@@ -91,13 +91,9 @@ export class StackedToasts extends React.Component {
         }
         let names = splitedMsg[0].split(",");
         var msg = splitedMsg[1];
-        console.log(names[0], names[1], msg)
-        const match = names.find(element => {
-            if (element.includes(username)) {
-                return true;
-            }
-        });
-        if (match !== undefined){
+        console.log(names[0], names[1], msg, username)
+
+        if (this.existsInArray(names, username) !== undefined || this.existsInArray(names, 'All')){
             parsedMsg = {
                 id: parsedMsg.id,
                 body: msg,
@@ -107,5 +103,14 @@ export class StackedToasts extends React.Component {
         }else {
             return this.state.messages;
         }
+    }
+
+    existsInArray(names, username){
+        const match = names.find(element => {
+            if (element.toLowerCase().includes(username.toLowerCase())) {
+                return true;
+            }
+        });
+        return match
     }
 }

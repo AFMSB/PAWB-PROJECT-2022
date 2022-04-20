@@ -20,11 +20,11 @@ func (u *UserChat) Read() {
 
 			break
 		} else {
-			u.Global.messages <- NewMessage(string(message), u.Username)
+			u.Global.Messages <- NewMessage(string(message), u.Username)
 		}
 	}
 
-	u.Global.leave <- u
+	u.Global.Leave <- u
 }
 
 func (u *UserChat) Write(message *Message) {
