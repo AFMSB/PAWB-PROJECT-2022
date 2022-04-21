@@ -44,7 +44,7 @@ func securityConcurrent() {
 			continue
 		}
 
-		if int(time.Now().Sub(timeLastUpdate).Hours()) < currentUser.AlertTime {
+		if !currentUser.SOS && int(time.Now().Sub(timeLastUpdate).Hours()) < currentUser.AlertTime {
 			continue
 		}
 		alertUser(uint(notifyUser))
