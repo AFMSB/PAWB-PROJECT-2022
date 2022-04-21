@@ -77,7 +77,16 @@ func GetUsersLocationWithFilters(c *gin.Context) {
 	controllers.GetUsersLocationWithFilters(c)
 }
 
-// TODO
+// @Summary Obtem todas as localizações do utilizador
+// @Description Obtem todas as localizações do utilizador
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Success 200 {array} model.Position
+// @Router /position/history/user [post]
+// @Failure 404 "UserID Not found"
+// @Failure 400 "Check Syntax, Dates Malformed"
 func GetUserLocationsHistory(c *gin.Context) {
 	controllers.GetUserLocationsHistory(c)
 }

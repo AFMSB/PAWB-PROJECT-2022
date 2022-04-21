@@ -109,7 +109,7 @@ func DeassociateFollower(c *gin.Context) {
 
 	var follower model.Follower
 	if err := c.ShouldBindJSON(&follower); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Bad request!"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Check Syntax!"})
 		return
 	}
 
