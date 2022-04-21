@@ -1,7 +1,7 @@
 import axios from "axios";
-import {API_URL} from "../index";
+import {BASE_URL} from "../index";
 const register = (username, password, confirmPassword) => {
-    return axios.post(API_URL + "/auth/register", {
+    return axios.post(BASE_URL + "/auth/register", {
         username,
         password,
         confirmPassword,
@@ -9,7 +9,7 @@ const register = (username, password, confirmPassword) => {
 };
 const login = (username, password) => {
     return axios
-        .post(API_URL + "/auth/login", {
+        .post(BASE_URL + "/auth/login", {
             username,
             password,
         })
@@ -31,7 +31,7 @@ const logout = async () => {
         method: 'POST',
         headers: headers
     };
-    const response = await fetch(API_URL + "/auth/logout", requestOptions);
+    const response = await fetch(BASE_URL + "/auth/logout", requestOptions);
     const data = await response.json();
     if (data.status === 200) {
         localStorage.removeItem("authToken");

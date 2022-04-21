@@ -191,6 +191,34 @@ paths:
           description: Unauthorized
       summary: Realizar registro
   /follower/:
+    delete:
+      consumes:
+      - application/json
+      description: Desassocia um Follower de um User
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Deassociate Follower from User
+        in: body
+        name: follower
+        required: true
+        schema:
+          $ref: '#/definitions/model.Follower'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deassociation Success
+        "400":
+          description: Token Malformed, Check Syntax
+        "404":
+          description: User Not found
+      security:
+      - BearerAuth: []
+      summary: Desassocia um Follower(User) de um User
     get:
       consumes:
       - application/json
@@ -215,7 +243,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem os Followers
-  /follower/assoc:
     post:
       consumes:
       - application/json
@@ -248,35 +275,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Associa um Follower(User) a um User
-  /follower/deassoc:
-    post:
-      consumes:
-      - application/json
-      description: Desassocia um Follower de um User
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Deassociate Follower from User
-        in: body
-        name: follower
-        required: true
-        schema:
-          $ref: '#/definitions/model.Follower'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Deassociation Success
-        "400":
-          description: Token Malformed, Check Syntax
-        "404":
-          description: User Not found
-      security:
-      - BearerAuth: []
-      summary: Desassocia um Follower(User) de um User
   /follower/following:
     get:
       consumes:

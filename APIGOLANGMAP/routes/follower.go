@@ -39,7 +39,7 @@ func GetAllFollowingUsers(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param follower body model.Follower	 true "Associate User as Follower"
-// @Router /follower/assoc [post]
+// @Router /follower/ [post]
 // @Success 200 {array} model.Follower
 // @Failure 400 "Token Malformed, Check Syntax, Follower User ID Already Associated"
 // @Failure 404 "User Not found"
@@ -54,7 +54,7 @@ func AssociateFollower(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param follower body model.Follower true "Deassociate Follower from User"
-// @Router /follower/deassoc [post]
+// @Router /follower/ [delete]
 // @Success 200 "Deassociation Success"
 // @Failure 400 "Token Malformed, Check Syntax"
 // @Failure 404 "User Not found"

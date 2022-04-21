@@ -266,9 +266,7 @@ const docTemplate = `{
                         "description": "Not found"
                     }
                 }
-            }
-        },
-        "/follower/assoc": {
+            },
             "post": {
                 "security": [
                     {
@@ -318,10 +316,8 @@ const docTemplate = `{
                         "description": "User Not found"
                     }
                 }
-            }
-        },
-        "/follower/deassoc": {
-            "post": {
+            },
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []

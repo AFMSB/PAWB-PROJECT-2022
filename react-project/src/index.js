@@ -5,7 +5,7 @@ import './css/index.css';
 import App from './App';
 import * as serviceWorker from "./serviceWorker";
 
-export const API_URL = "http://localhost:3000/api/v1";
+export const BASE_URL = "http://localhost:3000/api/v1";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -254,9 +254,7 @@
                         "description": "Not found"
                     }
                 }
-            }
-        },
-        "/follower/assoc": {
+            },
             "post": {
                 "security": [
                     {
@@ -306,10 +304,8 @@
                         "description": "User Not found"
                     }
                 }
-            }
-        },
-        "/follower/deassoc": {
-            "post": {
+            },
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []

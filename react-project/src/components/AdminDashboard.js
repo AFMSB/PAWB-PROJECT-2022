@@ -3,7 +3,7 @@ import UsersList from "./UsersList";
 import UsersLastLocation from "./UsersLastLocation";
 import '../css/App.css';
 import MapView from "./MapView";
-import {API_URL} from "../index";
+import {BASE_URL} from "../index";
 
 class AdminDashboard extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ class AdminDashboard extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch(API_URL + "/user/last-positions", requestOptions);
+        const response = await fetch(BASE_URL + "/user/last-positions", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.userLocs.map(async (marker) => {
             const date = marker.CreatedAt.split("T")
@@ -45,7 +45,7 @@ class AdminDashboard extends Component {
             headers: headers,
             body: JSON.stringify({"location": {"start": startDate, "end": endDate}, "userID": parseInt(userID)})
         };
-        const response = await fetch(API_URL + "/position/history/user", requestOptions);
+        const response = await fetch(BASE_URL + "/position/history/user", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             const date = marker.CreatedAt.split("T")
@@ -67,7 +67,7 @@ class AdminDashboard extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch(API_URL + "/user", requestOptions);
+        const response = await fetch(BASE_URL + "/user", requestOptions);
         const data = await response.json();
         if (data.status === 200) {
             const select = document.getElementById('adminMapSelector');
