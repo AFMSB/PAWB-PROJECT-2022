@@ -69,7 +69,8 @@ func (c *Chat) add(user *UserChat) {
 		c.Users[user.Username] = user
 
 		body := fmt.Sprintf("%s|*_*|Joined the Chat", user.Username)
-		c.broadcast(NewMessage(body, "Server"))
+		fmt.Println("body connected ->", body)
+		//c.broadcast(NewMessage(body, "Server"))
 	}
 }
 
@@ -87,7 +88,7 @@ func (c *Chat) disconnect(user *UserChat) {
 
 		body := fmt.Sprintf("%s|*_*|Left the Chat", user.Username)
 		fmt.Println("body disconnect ->", body)
-		c.broadcast(NewMessage(body, "Server"))
+		//c.broadcast(NewMessage(body, "Server"))
 	}
 }
 
