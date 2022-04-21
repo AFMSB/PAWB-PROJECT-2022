@@ -67,9 +67,11 @@ class Profile extends Component {
         const response = await fetch(API_URL + "history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
+
+            const date = marker.CreatedAt.split("T")
             return {
                 user_id: marker.UserId,
-                created_at: marker.CreatedAt.split("T")[0],
+                created_at: date[0] + "   " + date[1].split(".")[0],
                 geometry: [marker.Latitude, marker.Longitude]
             }
         }));
@@ -91,9 +93,10 @@ class Profile extends Component {
         const response = await fetch("http://localhost:3000/api/v1/follower/history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
+            const date = marker.CreatedAt.split("T")
             return {
                 user_id: marker.UserId,
-                created_at: marker.CreatedAt.split("T")[0],
+                created_at: date[0] + "   " + date[1].split(".")[0],
                 geometry: [marker.Latitude, marker.Longitude]
             }
         }));

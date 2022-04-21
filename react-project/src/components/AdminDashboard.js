@@ -25,9 +25,10 @@ class AdminDashboard extends Component {
         const response = await fetch(API_URL + "last-positions", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.userLocs.map(async (marker) => {
+            const date = marker.CreatedAt.split("T")
             return {
                 user_id: marker.UserID,
-                created_at: marker.CreatedAt.split("T")[0],
+                created_at: date[0] + "   " + date[1].split(".")[0],
                 geometry: [marker.Lat, marker.Long]
             }
         }));
@@ -45,12 +46,13 @@ class AdminDashboard extends Component {
             headers: headers,
             body: JSON.stringify({"location": {"start": startDate, "end": endDate}, "userID": parseInt(userID)})
         };
-        const response = await fetch("http://localhost:3000/api/v1/position/history/user",requestOptions);
+        const response = await fetch("http://localhost:3000/api/v1/position/history/user", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
+            const date = marker.CreatedAt.split("T")
             return {
                 user_id: marker.UserId,
-                created_at: marker.CreatedAt.split("T")[0],
+                created_at: date[0] + "   " + date[1].split(".")[0],
                 geometry: [marker.Latitude, marker.Longitude]
             }
         }));
@@ -61,7 +63,7 @@ class AdminDashboard extends Component {
 
     async getAllUsers() {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
-        const currentUser = localStorage.getItem("username").replaceAll('"','');
+        const currentUser = localStorage.getItem("username").replaceAll('"', '');
         const requestOptions = {
             method: 'GET',
             headers: headers
@@ -71,7 +73,7 @@ class AdminDashboard extends Component {
         if (data.status === 200) {
             const select = document.getElementById('adminMapSelector');
             for (let i = 0; i <= data.users.length; i++) {
-                if (currentUser !== data.users[i].username){
+                if (currentUser !== data.users[i].username) {
                     const opt = document.createElement('option');
                     opt.value = 'userLocs'
                     opt.id = data.users[i].ID;
