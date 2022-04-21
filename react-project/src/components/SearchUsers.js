@@ -39,6 +39,7 @@ class SearchUsers extends Component {
     async deassocFollowerHandler(e) {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
         const followerId = e.target.id;
+        console.log("fID:",followerId)
         if (followerId) {
             const requestOptions = {
                 method: 'POST',
@@ -58,14 +59,12 @@ class SearchUsers extends Component {
     async search(val) {
         this.setState({loading: true});
         let results
+        results = "empty"
         if (val.length > 0) {
             results = await search(
                 `http://localhost:3000/api/v1/user/search?username=${val}`
             );
-        } else {
-            results = "empty"
         }
-
         const users = results;
 
         this.setState({users, loading: false});
@@ -89,6 +88,8 @@ class SearchUsers extends Component {
             const response = await fetch("http://localhost:3000/api/v1/follower/assoc", requestOptions);
             const data = await response.json();
             if (data.status === 201) {
+                this.setState({value: ""})
+                this.setState({users: "empty"})
                 await this.fetchUserFollowers()
             }
         } else {
@@ -125,7 +126,7 @@ class SearchUsers extends Component {
                 <div className="d-flex justify-content-end">
                     <div>
                         <div className="d-flex">
-                            <input type="text" className="widgets-input" value={this.state.value}
+                            <input type="text" className="widgets-input" id="searchUsersInput" value={this.state.value}
                                    onChange={e => this.onChangeHandler(e)} placeholder="Search User to Add."/>
                         </div>
                         {this.renderUsers}

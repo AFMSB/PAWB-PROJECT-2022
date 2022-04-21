@@ -275,7 +275,7 @@ class Profile extends Component {
                     </div>
                     <div className="col-12 col-md-9 card profile-card">
                         <div className="card-body map-parent">
-                            <MapView markers={this.state.markers} zoom={12}
+                            <MapView markers={this.state.markers} zoom={6}
                                      center={getCentralGeoCoordinate(this.state.markers)}/>
                             <div className="map-overlay d-flex">
                                 <input className="custom-select map-overlay-input"

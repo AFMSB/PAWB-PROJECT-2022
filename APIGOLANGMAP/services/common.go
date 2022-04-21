@@ -131,16 +131,13 @@ func CreateUsers() {
 	}
 }
 func AssocUserFollower(userIDs []uint) {
-	for i := 0; i < len(userIDs); i++ {
+	for i := 1; i < len(userIDs); i++ {
+		// Start in 1 to exclude 'admin'
 		var follower model.Follower
-		if i == 0 {
-			follower.UserID = userIDs[i]
-			follower.FollowerUserID = 1 // Admin -> Always Created
-		} else {
-			follower.UserID = userIDs[i]
-			follower.FollowerUserID = userIDs[i-1]
-		}
+		follower.UserID = userIDs[i]
+		follower.FollowerUserID = userIDs[i-1]
 		Db.Save(&follower)
+
 	}
 }
 
@@ -152,8 +149,8 @@ func AddPositionToUsers() {
 	if users != nil {
 		for i := 0; i < len(users); i++ {
 			for j := 0; j < PointsPerUser; j++ {
-				lat := 41.1486 * math.Pi / 180
-				lon := -8.611 * math.Pi / 180
+				lat := 41.271568 * math.Pi / 180
+				lon := -8.082957 * math.Pi / 180
 				maxDistance := float64(10000)
 				minDistance := float64(1000)
 				earthRadius := float64(6371000)
@@ -170,8 +167,14 @@ func AddPositionToUsers() {
 				p.UserID = users[i].ID
 				p.Latitude = float32((lat + deltaLat) * 180 / math.Pi)
 				p.Longitude = float32((lon + deltaLon) * 180 / math.Pi)
-				if errGeoLocation := Db.Exec("INSERT INTO positions (latitude, longitude, user_id, geolocation,created_at,updated_at) VALUES (?,?,?,ST_SetSRID(ST_Point(?,?),4326)::geography,current_timestamp,current_timestamp)",
-					p.Latitude, p.Longitude, p.UserID, p.Latitude, p.Longitude).Error; errGeoLocation != nil {
+
+				currentTimestamp := time.Now()
+				if j%2 == 0 {
+					currentTimestamp = time.Now().Add(-24 * time.Hour) // Yesterday
+				}
+
+				if errGeoLocation := Db.Exec("INSERT INTO positions (latitude, longitude, user_id, geolocation,created_at,updated_at) VALUES (?,?,?,ST_SetSRID(ST_Point(?,?),4326)::geography,?,?)",
+					p.Latitude, p.Longitude, p.UserID, p.Latitude, p.Longitude, currentTimestamp, currentTimestamp).Error; errGeoLocation != nil {
 					log.Println("ERROR Inserting Default Position")
 				}
 			}
