@@ -1,8 +1,6 @@
 import React from 'react';
 import {Toast} from "./Toast";
 
-const baseURL = 'ws://localhost:9090/ws';
-
 export class StackedToasts extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +22,6 @@ export class StackedToasts extends React.Component {
 
         return (
             <div className="toast-container">
-                {/*<Status status={ws ? 'connected' : 'disconnected'} />*/}
                 {
                     ws && <Toast toasts={messages}/>
                 }
@@ -33,10 +30,10 @@ export class StackedToasts extends React.Component {
     }
 
     enterChat() {
-        this.state.username = localStorage.getItem("username").replaceAll('"', '');
-        const { username } = this.state;
+        this.state.user_id = localStorage.getItem("uid").replaceAll('"', '');
+        const { user_id } = this.state;
 
-        let ws = new WebSocket(baseURL + `?username=${username}`);
+        let ws = new WebSocket(`ws://127.0.0.1:8081/socket/${user_id}`);
 
         ws.onopen = (evt) => {
             console.log('Websocket opened!', {evt});
@@ -48,8 +45,9 @@ export class StackedToasts extends React.Component {
         }
 
         ws.onmessage = (msg) => {
-            console.log('Websocket message:', {msg});
-            this.setMessages(msg.data);
+            msg = msg.data;
+            console.log('Websocket message:', msg);
+            this.setMessages(msg);
         }
 
         ws.onerror = (error) => {
@@ -59,58 +57,13 @@ export class StackedToasts extends React.Component {
         this.setState({ws});
     }
 
-    sendMessage() {
-        const { ws, message } = this.state;
-
-        ws.send(message);
-        this.setMessage('');
-    }
-
-    setUsername(value) {
-        this.setState({username: value});
-    }
-
     setMessage(value) {
         this.setState({message: value});
     }
 
     setMessages(value) {
-        let messages = this.state.messages.concat([JSON.parse(value)]);
-        console.log("messages-1 ", messages)
-        messages = this.filterReceivedMessage(value)
-        console.log("messages-2 ", messages)
+        let messages = this.state.messages.concat(value);
+        //messages = this.filterReceivedMessage(value)
         this.setState({messages});
-    }
-
-    filterReceivedMessage(message){
-        let username = this.state.username
-        let parsedMsg = JSON.parse(message);
-        let splitedMsg = parsedMsg.body.split("|*_*|");
-        if (splitedMsg.length < 2){
-            return this.state.messages.concat([JSON.parse(message)]);
-        }
-        let names = splitedMsg[0].split(",");
-        var msg = splitedMsg[1];
-        console.log(names[0], names[1], msg, username)
-
-        if (this.existsInArray(names, username) !== undefined || this.existsInArray(names, 'All')){
-            parsedMsg = {
-                id: parsedMsg.id,
-                body: msg,
-                sender: parsedMsg.sender
-            }
-            return this.state.messages.concat([parsedMsg]);
-        }else {
-            return this.state.messages;
-        }
-    }
-
-    existsInArray(names, username){
-        const match = names.find(element => {
-            if (element.toLowerCase().includes(username.toLowerCase())) {
-                return true;
-            }
-        });
-        return match
     }
 }

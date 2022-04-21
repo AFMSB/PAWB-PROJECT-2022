@@ -43,7 +43,7 @@ func securityConcurrent() {
 			log.Println("User reject from Alert ", notifyUser)
 			continue
 		}
-		//fmt.Println(currentUser.Username, currentUser.SOS, time.Now().Sub(timeLastUpdate).Hours(), currentUser.AlertTime)
+
 		if currentUser.SOS && int(time.Now().Sub(timeLastUpdate).Hours()) >= currentUser.AlertTime {
 			alertUser(uint(notifyUser))
 		}
@@ -63,6 +63,7 @@ func alertUser(user uint) {
 	followers := FetchAllFollowers(user)
 	fmt.Println(followers)
 
-	InitConnection()
-	SendMessage(followers, fmt.Sprintf("%s has not updated his location for more than %d hours, so he may be in danger", u.Username, u.AlertTime))
+	for _, follower := range followers {
+		Sender(follower.ID, fmt.Sprintf("%s has not updated his location for more than %d hours, so he may be in danger", u.Username, u.AlertTime))
+	}
 }

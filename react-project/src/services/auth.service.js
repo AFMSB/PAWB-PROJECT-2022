@@ -19,6 +19,7 @@ const login = (username, password) => {
                 localStorage.setItem("authToken", JSON.stringify(response.data.token));
                 localStorage.setItem("username", JSON.stringify(response.data.username));
                 localStorage.setItem("access", JSON.stringify(response.data.access));
+                localStorage.setItem("uid", JSON.stringify(response.data.uid));
             }
             return response.data;
         })
@@ -38,6 +39,7 @@ const logout = async () => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("access");
         localStorage.removeItem("username");
+        localStorage.removeItem("uid");
         return response.data;
     }
 };

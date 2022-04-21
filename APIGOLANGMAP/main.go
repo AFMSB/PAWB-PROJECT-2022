@@ -5,8 +5,6 @@ import (
 	"APIGOLANGMAP/repository"
 	"APIGOLANGMAP/routes"
 	"APIGOLANGMAP/services"
-	"APIGOLANGMAP/websocket"
-	"flag"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -30,11 +28,6 @@ func init() {
 }
 
 func main() {
-	var (
-		port = flag.String("p", ":9090", "set port")
-	)
-
-	go websocket.Start(*port)
 
 	services.FormatSwagger()
 
@@ -95,7 +88,10 @@ func main() {
 		user.GET("/search", routes.SearchUsersByUsername)
 		user.POST("/sos", routes.ChangeSOSState)
 		user.GET("/alert-time", routes.GetAlertTime)
+		user.POST("/users-under-xkms", routes.GetUsersUnderXkms)
 	}
+
+	router.GET("/socket/:id", routes.WebSocket)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.Run(":8080")

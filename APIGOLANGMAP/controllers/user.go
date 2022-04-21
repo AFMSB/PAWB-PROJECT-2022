@@ -140,12 +140,49 @@ func GetAlertTime(c *gin.Context) {
 	return
 }
 
-func GetAllUsersUnderXKms(user model.User) ([]model.User, error) {
+func GetAllUsersUnderXKms(c *gin.Context) {
+	userID, errAuth := c.Get("userid")
+
+	var bodyData struct {
+		Radius int `json:"Radius"`
+	}
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+
+	var user model.User
+	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": http.StatusUnauthorized, "message": "User Not Found."})
+		return
+	}
+
+	if err := c.BindJSON(&bodyData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Bad request!"})
+		return
+	}
+
+	if bodyData.Radius > 10000 {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Radius field represents the distance in kilometers and must be an integer equal to or less than 10 thousand (10 000)"})
+		return
+	}
+
+	users, err := FetchAllUsersUnderXKms(user, bodyData.Radius*1000)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusInternalServerError, "message": "Error", "Error": err})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success", "Users": users})
+	return
+}
+
+func FetchAllUsersUnderXKms(user model.User, radius int) ([]model.User, error) {
 	var users []model.User
 
 	userLastLoc, err := FetchUserLastLocation(user.ID)
 	if err == nil {
-		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Longitude, userLastLoc.Latitude, 30000).Scan(&users)
+		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Longitude, userLastLoc.Latitude, radius).Scan(&users)
 	} else {
 		return users, err
 	}
@@ -162,8 +199,9 @@ func FetchUserLastLocation(userID uint) (model.Position, error) {
 func SendDangerZoneAlert2Followers(userID uint) {
 	var user model.User
 	services.Db.Find(&user, userID)
-	var followers, _ = GetAllUsersUnderXKms(user)
+	var followers, _ = FetchAllUsersUnderXKms(user, 30*1000)
 
-	services.InitConnection()
-	services.SendMessage(followers, fmt.Sprintf("%s has activated SOS mode near you, you are receiving this message because you are following him and your last location is within a 30 km radius of where SOS mode was activated.", user.Username))
+	for _, follower := range followers {
+		services.Sender(follower.ID, fmt.Sprintf("%s has activated SOS mode near you, you are receiving this message because you are following him and your last location is within a 30 km radius of where SOS mode was activated.", user.Username))
+	}
 }

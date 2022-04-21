@@ -40,7 +40,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!", "username": creds.Username, "token": token, "access": usr.AccessMode})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!", "username": creds.Username, "token": token, "access": usr.AccessMode, "uid": usr.ID})
 }
 
 func RegisterHandler(c *gin.Context) {

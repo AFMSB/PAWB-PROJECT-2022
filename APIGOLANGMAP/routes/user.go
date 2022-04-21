@@ -2,6 +2,7 @@ package routes
 
 import (
 	"APIGOLANGMAP/controllers"
+	"APIGOLANGMAP/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -57,4 +58,27 @@ func GetUserInfo(c *gin.Context) {
 // TODO swagger
 func GetAlertTime(c *gin.Context) {
 	controllers.GetAlertTime(c)
+}
+
+// @Summary Exibe uma lista de users que se encontram num raio igual a inferior a x kms
+// @Description Exibe uma lista de users que se encontram num raio igual a inferior a x kms
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Success 200 {array} model.User
+// @Router /users-under-xkms [post]
+// @Failure 404 "Not found"
+// @Failure 401 "Unauthorized"
+// @Failure 500 "Internal Server Error"
+func GetUsersUnderXkms(c *gin.Context) {
+	controllers.GetAllUsersUnderXKms(c)
+}
+
+// @Success 200 "Connection confirm"
+// @Router /socket [get]
+// @Failure 404 "Connection failed"
+// @Failure 400 "User Token Malformed"
+func WebSocket(c *gin.Context) {
+	services.InitConnectionSocket(c)
 }
