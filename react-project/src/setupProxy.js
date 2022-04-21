@@ -1,9 +1,10 @@
+import {API_URL} from "./index";
+
 const { createProxyMiddleware } = require("http-proxy-middleware");
 module.exports = function (app) {
     app.use(
-        "/api/v1/",
         createProxyMiddleware({
-            target: "http://localhost:8081",
+            target: API_URL,
             changeOrigin: true,
         })
     );

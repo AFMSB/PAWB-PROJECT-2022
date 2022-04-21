@@ -1,8 +1,7 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:3000/api/v1/auth/";
+import {API_URL} from "../index";
 const register = (username, password, confirmPassword) => {
-    return axios.post(API_URL + "register", {
+    return axios.post(API_URL + "/auth/register", {
         username,
         password,
         confirmPassword,
@@ -10,7 +9,7 @@ const register = (username, password, confirmPassword) => {
 };
 const login = (username, password) => {
     return axios
-        .post(API_URL + "login", {
+        .post(API_URL + "/auth/login", {
             username,
             password,
         })
@@ -32,7 +31,7 @@ const logout = async () => {
         method: 'POST',
         headers: headers
     };
-    const response = await fetch(API_URL + "logout", requestOptions);
+    const response = await fetch(API_URL + "/auth/logout", requestOptions);
     const data = await response.json();
     if (data.status === 200) {
         localStorage.removeItem("authToken");

@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import {truncStr} from "../services/utils";
-
-const API_URL = "http://localhost:3000/api/v1/user";
+import {API_URL} from "../index";
 
 function UsersList() {
     const [users, setUsers] = useState([])
@@ -15,7 +14,7 @@ function UsersList() {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
 
         const response = await axios
-            .get(API_URL, {
+            .get(API_URL + "/user", {
                 headers: headers
             })
             .catch(error => {
