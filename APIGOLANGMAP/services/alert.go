@@ -11,7 +11,7 @@ import (
 
 func StartService() {
 	cron := gocron.NewScheduler(time.UTC)
-	cron.Every(1).Hour().Do(securityConcurrent)
+	cron.Every(1).Minute().Do(securityConcurrent)
 	cron.StartAsync()
 }
 
@@ -43,11 +43,10 @@ func securityConcurrent() {
 			log.Println("User reject from Alert ", notifyUser)
 			continue
 		}
-
-		if !currentUser.SOS && int(time.Now().Sub(timeLastUpdate).Hours()) < currentUser.AlertTime {
-			continue
+		//fmt.Println(currentUser.Username, currentUser.SOS, time.Now().Sub(timeLastUpdate).Hours(), currentUser.AlertTime)
+		if currentUser.SOS && int(time.Now().Sub(timeLastUpdate).Hours()) >= currentUser.AlertTime {
+			alertUser(uint(notifyUser))
 		}
-		alertUser(uint(notifyUser))
 	}
 }
 
