@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
-
-const API_URL = "http://localhost:3000/api/v1/user/";
+import {BASE_URL} from "../index";
 
 function UsersLastLocation() {
     const [usersLastLocation, setUsersLastLocation] = useState([])
@@ -14,7 +13,7 @@ function UsersLastLocation() {
         const headers = {'Authorization': `Bearer ${localStorage.getItem("authToken").replaceAll('"', '')}`}
 
         const response = await axios
-            .get(API_URL + "last-positions",{
+            .get(BASE_URL + "/user/last-positions",{
                 headers: headers
             })
             .catch(error => {

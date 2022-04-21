@@ -13,7 +13,7 @@ import (
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Success 200 {array} model.Follower
-// @Router /follower [get]
+// @Router /follower/ [get]
 // @Failure 404 "Not found"
 func GetAllFollowers(c *gin.Context) {
 	controllers.GetAllFollowers(c)
@@ -26,7 +26,7 @@ func GetAllFollowers(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Success 200 {array} model.Follower
-// @Router /follower [get]
+// @Router /follower/following [get]
 // @Failure 404 "Not found"
 func GetAllFollowingUsers(c *gin.Context) {
 	controllers.GetAllFollowingUsers(c)
@@ -39,10 +39,10 @@ func GetAllFollowingUsers(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param follower body model.Follower	 true "Associate User as Follower"
-// @Router /follower/assoc [post]
+// @Router /follower/ [post]
 // @Success 200 {array} model.Follower
-// @Failure 400 "Bad request"
-// @Failure 404 "Not found"
+// @Failure 400 "Token Malformed, Check Syntax, Follower User ID Already Associated"
+// @Failure 404 "User Not found"
 func AssociateFollower(c *gin.Context) {
 	controllers.AssociateFollower(c)
 }
@@ -54,15 +54,26 @@ func AssociateFollower(c *gin.Context) {
 // @Security BearerAuth
 // @param Authorization header string true "Token"
 // @Param follower body model.Follower true "Deassociate Follower from User"
-// @Router /follower/deassoc [post]
-// @Success 200 {array} model.Follower
-// @Failure 400 "Bad request"
-// @Failure 404 "Not found"
+// @Router /follower/ [delete]
+// @Success 200 "Deassociation Success"
+// @Failure 400 "Token Malformed, Check Syntax"
+// @Failure 404 "User Not found"
 func DeassociateFollower(c *gin.Context) {
 	controllers.DeassociateFollower(c)
 }
 
-// TODO
+// @Summary Obtem as localizações de um Follower
+// @Description Obtem as localizações de um determinado Follower
+// @Accept  json
+// @Produce  json
+// @Security BearerAuth
+// @param Authorization header string true "Token"
+// @Param follower body model.Position true "get follower locations history"
+// @Router /follower/history [post]
+// @Success 200 {array} model.Position
+// @Failure 400 "Token Malformed, Check Syntax, Dates Malformed"
+// @Failure 404 "User ID Not Found, "
+// @Failure 401 "User not authorized to check given User locations."
 func GetFollowerLocationsHistory(c *gin.Context) {
 	controllers.GetFollowerLocationsHistory(c)
 }

@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-
 import {search, truncStr} from "../services/utils";
-
+import {BASE_URL} from "../index";
 
 class SearchUsers extends Component {
     constructor(props) {
@@ -25,7 +24,7 @@ class SearchUsers extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch("http://localhost:3000/api/v1/follower", requestOptions);
+        const response = await fetch(BASE_URL+"/follower", requestOptions);
         const data = await response.json();
         this.setState({
             userFollowers: data.data
@@ -42,11 +41,11 @@ class SearchUsers extends Component {
         console.log("fID:",followerId)
         if (followerId) {
             const requestOptions = {
-                method: 'POST',
+                method: 'DELETE',
                 headers: headers,
                 body: JSON.stringify({"FollowerUserID": parseInt(followerId)})
             };
-            const response = await fetch("http://localhost:3000/api/v1/follower" + "/deassoc", requestOptions);
+            const response = await fetch(BASE_URL+"/follower/", requestOptions);
             const data = await response.json();
             if (data.status === 200) {
                 await this.fetchUserFollowers()
@@ -62,7 +61,7 @@ class SearchUsers extends Component {
         results = "empty"
         if (val.length > 0) {
             results = await search(
-                `http://localhost:3000/api/v1/user/search?username=${val}`
+                BASE_URL+`/user/search?username=${val}`
             );
         }
         const users = results;
@@ -85,7 +84,7 @@ class SearchUsers extends Component {
                 headers: headers,
                 body: JSON.stringify({"FollowerUserID": parseInt(followerId)})
             };
-            const response = await fetch("http://localhost:3000/api/v1/follower/assoc", requestOptions);
+            const response = await fetch(BASE_URL+"/follower/", requestOptions);
             const data = await response.json();
             if (data.status === 201) {
                 this.setState({value: ""})

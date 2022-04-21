@@ -4,8 +4,7 @@ import MapView from "./MapView";
 import '../css/App.css';
 import {getCentralGeoCoordinate} from "../services/utils";
 import {StackedToasts} from "./StackedToast";
-
-const API_URL = "http://localhost:3000/api/v1/position/";
+import {BASE_URL} from "../index";
 
 
 class Profile extends Component {
@@ -31,7 +30,7 @@ class Profile extends Component {
                 headers: headers,
                 body: JSON.stringify({"Latitude": lat, "Longitude": long})
             };
-            const response = await fetch(API_URL, requestOptions);
+            const response = await fetch(BASE_URL+"/position", requestOptions);
             const data = await response.json();
             if (data.status === 200) {
                 await this.getUserLocationsHistory();
@@ -64,7 +63,7 @@ class Profile extends Component {
             headers: headers,
             body: JSON.stringify({"start": startDate, "end": endDate})
         };
-        const response = await fetch(API_URL + "history", requestOptions);
+        const response = await fetch(BASE_URL + "/position/history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
 
@@ -90,7 +89,7 @@ class Profile extends Component {
             //body: JSON.stringify({"location":{"start": "0", "end": "0"}, "followerID":parseInt(followerID)})
             body: JSON.stringify({"location": {"start": startDate, "end": endDate}, "followerID": parseInt(followerID)})
         };
-        const response = await fetch("http://localhost:3000/api/v1/follower/history", requestOptions);
+        const response = await fetch(BASE_URL+"/follower/history", requestOptions);
         const data = await response.json();
         let markers = await Promise.all(data.locations.map(async (marker) => {
             const date = marker.CreatedAt.split("T")
@@ -112,7 +111,7 @@ class Profile extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch("http://localhost:3000/api/v1/user/info", requestOptions);
+        const response = await fetch(BASE_URL+"/user/info", requestOptions);
         const data = await response.json();
         if (data.status === 200) {
             this.setState({
@@ -129,7 +128,7 @@ class Profile extends Component {
             method: 'POST',
             headers: headers
         };
-        const response = await fetch("http://localhost:3000/api/v1/user/sos", requestOptions);
+        const response = await fetch(BASE_URL+"/user/sos", requestOptions);
         const data = await response.json();
         if (data.status === 200) {
             this.setState({
@@ -147,7 +146,7 @@ class Profile extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch("http://localhost:3000/api/v1/user/alert-time", requestOptions);
+        const response = await fetch(BASE_URL+"/user/alert-time", requestOptions);
         const data = await response.json();
         if (data.status === 200) {
             this.setState({
@@ -169,7 +168,7 @@ class Profile extends Component {
                 headers: headers,
                 body: JSON.stringify({"AlertTime": parseInt(activities.value)})
             };
-            const response = await fetch("http://localhost:3000/api/v1/alert/time", requestOptions);
+            const response = await fetch(BASE_URL+"/alert/time", requestOptions);
             const data = await response.json();
             if (data.status === 201) {
                 this.setState({
@@ -189,7 +188,7 @@ class Profile extends Component {
             method: 'GET',
             headers: headers
         };
-        const response = await fetch("http://localhost:3000/api/v1/follower/following", requestOptions);
+        const response = await fetch(BASE_URL+"/follower/following", requestOptions);
         const data = await response.json();
         if (data.status === 200) {
             const select = document.getElementById('mapSelector');

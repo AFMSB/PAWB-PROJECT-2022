@@ -16,6 +16,68 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/alert/time/": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Atualiza a periodicidade de alerta determinando o tempo máximo até dar uma pessoa como perdida",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Atualiza a periodicidade de alerta",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Udpdate Alert",
+                        "name": "evaluation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "406": {
+                        "description": "Not acceptable"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Autentica o utilizador e gera o token para os próximos acessos",
@@ -54,7 +116,7 @@ const docTemplate = `{
             }
         },
         "/auth/logout": {
-            "post": {
+            "put": {
                 "description": "Desautentica o utilizador invalidando o token atual",
                 "consumes": [
                     "application/json"
@@ -166,59 +228,7 @@ const docTemplate = `{
                 }
             }
         },
-		"/alert/time": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Atualiza a periodicidade de alerta determinando o tempo máximo até dar uma pessoa como perdida",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Atualiza a periodicidade de alerta",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Update Alert",
-                        "name": "Username",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Alert"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.Alert"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "406": {
-                        "description": "Not acceptable"
-                    }
-                }
-            },
-        },
-        "/follower": {
+        "/follower/": {
             "get": {
                 "security": [
                     {
@@ -256,9 +266,7 @@ const docTemplate = `{
                         "description": "Not found"
                     }
                 }
-            }
-        },
-        "/follower/assoc": {
+            },
             "post": {
                 "security": [
                     {
@@ -302,16 +310,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "description": "Token Malformed, Check Syntax, Follower User ID Already Associated"
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "User Not found"
                     }
                 }
-            }
-        },
-        "/follower/deassoc": {
-            "post": {
+            },
+            "delete": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -345,6 +351,43 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
+                        "description": "Deassociation Success"
+                    },
+                    "400": {
+                        "description": "Token Malformed, Check Syntax"
+                    },
+                    "404": {
+                        "description": "User Not found"
+                    }
+                }
+            }
+        },
+        "/follower/following": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe a lista, sem todos os campos, de todos os users que estamos a seguir",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtem os users que estamos a seguir",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
@@ -353,11 +396,63 @@ const docTemplate = `{
                             }
                         }
                     },
-                    "400": {
-                        "description": "Bad request"
-                    },
                     "404": {
                         "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/follower/history": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Obtem as localizações de um determinado Follower",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtem as localizações de um Follower",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "get follower locations history",
+                        "name": "follower",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Position"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Position"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Token Malformed, Check Syntax, Dates Malformed"
+                    },
+                    "401": {
+                        "description": "User not authorized to check given User locations."
+                    },
+                    "404": {
+                        "description": "User ID Not Found, "
                     }
                 }
             }
@@ -449,6 +544,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/position/filter": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe a lista de localizações dos utilizadores",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtem todas as localizações dos utilizadores com filtros",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Position"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User Token Malformed"
+                    },
+                    "404": {
+                        "description": "Location Not found"
+                    }
+                }
+            }
+        },
         "/position/history": {
             "get": {
                 "security": [
@@ -488,6 +626,49 @@ const docTemplate = `{
                     },
                     "404": {
                         "description": "User Not found"
+                    }
+                }
+            }
+        },
+        "/position/history/user": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Obtem todas as localizações do utilizador",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtem todas as localizações do utilizador",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Position"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Check Syntax, Dates Malformed"
+                    },
+                    "404": {
+                        "description": "UserID Not found"
                     }
                 }
             }
@@ -534,21 +715,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/socket": {
+        "/user/": {
             "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Inicia todos os recursos necessario para a criação de uma webSocket com o cliente",
+                "description": "Exibe a lista, sem todos os campos, de todos os Users",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Iniciar conecção com a webSocket",
+                "summary": "Obtem todos os  Users",
                 "parameters": [
                     {
                         "type": "string",
@@ -560,13 +741,207 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Connection confirm"
-                    },
-                    "400": {
-                        "description": "User Token Malformed"
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Connection failed"
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/user/alert-time": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Obter o tempo para alertas definido pelo utilizador",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obter o tempo para alertas definido pelo utilizador",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/user/info": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Obter a informação do utilizador",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obter a informação do utilizador",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/user/last-positions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe a lista, sem todos os campos, da última posição/localização de cada User",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obtem última posição/localização de cada User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/user/search": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe a lista, sem todos os campos, de Users dado um username",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Obter Users dado um username",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Token Malformed"
+                    }
+                }
+            }
+        },
+        "/user/sos": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Alterar para on/off o estado do SOS do utilizador",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Alterar estado do SOS",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "bool"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
                     }
                 }
             }
@@ -616,22 +991,20 @@ const docTemplate = `{
                 }
             }
         },
-		"model.Alert": {
-            "type": "object",
-            "properties": {
-                "alertTime": {
-                    "type": "integer"
-                },
-            }
-        },
         "model.User": {
             "type": "object",
             "properties": {
                 "access_mode": {
                     "type": "integer"
                 },
+                "alertTime": {
+                    "type": "integer"
+                },
                 "password": {
                     "type": "string"
+                },
+                "sos": {
+                    "type": "boolean"
                 },
                 "userFriends": {
                     "type": "array",
