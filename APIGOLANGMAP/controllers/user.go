@@ -3,6 +3,7 @@ package controllers
 import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/services"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -164,5 +165,5 @@ func SendDangerZoneAlert2Followers(userID uint) {
 	var followers, _ = GetAllUsersUnderXKms(user)
 
 	services.InitConnection()
-	services.SendMessage(followers, "An SOS alert nearby was given by "+user.Username)
+	services.SendMessage(followers, fmt.Sprintf("%s has activated SOS mode near you, you are receiving this message because you are following him and your last location is within a 30 km radius of where SOS mode was activated.", user.Username))
 }
