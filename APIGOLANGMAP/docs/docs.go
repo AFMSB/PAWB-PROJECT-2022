@@ -16,68 +16,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/alert/time/": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Atualiza a periodicidade de alerta determinando o tempo máximo até dar uma pessoa como perdida",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Atualiza a periodicidade de alerta",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Udpdate Alert",
-                        "name": "evaluation",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "401": {
-                        "description": "Unauthorized"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "406": {
-                        "description": "Not acceptable"
-                    }
-                }
-            }
-        },
         "/auth/login": {
             "post": {
                 "description": "Autentica o utilizador e gera o token para os próximos acessos",
@@ -87,6 +25,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Realizar autenticação",
                 "parameters": [
                     {
@@ -95,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/swaggermodel.UserLoginSwagger"
                         }
                     }
                 ],
@@ -116,7 +57,7 @@ const docTemplate = `{
             }
         },
         "/auth/logout": {
-            "put": {
+            "post": {
                 "description": "Desautentica o utilizador invalidando o token atual",
                 "consumes": [
                     "application/json"
@@ -124,17 +65,11 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Realizar desautenticação",
                 "parameters": [
-                    {
-                        "description": "Do logout",
-                        "name": "evaluation",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.User"
-                        }
-                    },
                     {
                         "type": "string",
                         "description": "Token",
@@ -161,6 +96,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Authentication"
                 ],
                 "summary": "Atualiza token de autenticação",
                 "parameters": [
@@ -200,6 +138,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Realizar registro",
                 "parameters": [
                     {
@@ -208,7 +149,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/swaggermodel.UserRegisterSwagger"
                         }
                     }
                 ],
@@ -241,6 +182,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Follower"
                 ],
                 "summary": "Obtem os Followers",
                 "parameters": [
@@ -280,6 +224,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Follower"
+                ],
                 "summary": "Associa um Follower(User) a um User",
                 "parameters": [
                     {
@@ -295,7 +242,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Follower"
+                            "$ref": "#/definitions/swaggermodel.FollowingSwagger"
                         }
                     }
                 ],
@@ -330,6 +277,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Follower"
+                ],
                 "summary": "Desassocia um Follower(User) de um User",
                 "parameters": [
                     {
@@ -345,7 +295,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Follower"
+                            "$ref": "#/definitions/swaggermodel.FollowingSwagger"
                         }
                     }
                 ],
@@ -375,6 +325,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Follower"
                 ],
                 "summary": "Obtem os users que estamos a seguir",
                 "parameters": [
@@ -416,6 +369,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Follower"
+                ],
                 "summary": "Obtem as localizações de um Follower",
                 "parameters": [
                     {
@@ -431,7 +387,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Position"
+                            "$ref": "#/definitions/swaggermodel.FollowingHistorySwagger"
                         }
                     }
                 ],
@@ -458,6 +414,58 @@ const docTemplate = `{
             }
         },
         "/position": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Cria uma localizacao de um utilizador em especifico",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Position"
+                ],
+                "summary": "Adicionar uma localizaçao",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Add Location",
+                        "name": "evaluation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.PositionAddSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Position"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/position/": {
             "get": {
                 "security": [
                     {
@@ -470,6 +478,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Position"
                 ],
                 "summary": "Obter a última localização do utilizador",
                 "parameters": [
@@ -495,53 +506,6 @@ const docTemplate = `{
                         "description": "User Not found"
                     }
                 }
-            },
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Cria uma localizacao de um utilizador em especifico",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Adicionar uma localizaçao",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Add Location",
-                        "name": "evaluation",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Position"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/model.Position"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    }
-                }
             }
         },
         "/position/filter": {
@@ -558,6 +522,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Position"
+                ],
                 "summary": "Obtem todas as localizações dos utilizadores com filtros",
                 "parameters": [
                     {
@@ -566,6 +533,15 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "Add Location",
+                        "name": "localization",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.UserLocationWithFilters"
+                        }
                     }
                 ],
                 "responses": {
@@ -588,7 +564,7 @@ const docTemplate = `{
             }
         },
         "/position/history": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -601,6 +577,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Position"
+                ],
                 "summary": "Obtem todas as localizações do utilizador",
                 "parameters": [
                     {
@@ -609,6 +588,15 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "get locations history",
+                        "name": "localization",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.UserLocationHistory"
+                        }
                     }
                 ],
                 "responses": {
@@ -644,6 +632,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Position"
+                ],
                 "summary": "Obtem todas as localizações do utilizador",
                 "parameters": [
                     {
@@ -652,6 +643,15 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "Add Location",
+                        "name": "localization",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.UserLocationHistoryUser"
+                        }
                     }
                 ],
                 "responses": {
@@ -687,6 +687,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Position"
+                ],
                 "summary": "Exclui uma localização",
                 "operationId": "get-string-by-int",
                 "parameters": [
@@ -715,6 +718,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/socket": {
+            "get": {
+                "description": "Web Socket permite enviar notificações diretamente para o frontend",
+                "tags": [
+                    "Socket"
+                ],
+                "summary": "Web Socket permite enviar notificações diretamente para o frontend",
+                "responses": {
+                    "200": {
+                        "description": "Connection confirm"
+                    },
+                    "400": {
+                        "description": "User Token Malformed"
+                    },
+                    "404": {
+                        "description": "Connection failed"
+                    }
+                }
+            }
+        },
         "/user/": {
             "get": {
                 "security": [
@@ -728,6 +751,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Obtem todos os  Users",
                 "parameters": [
@@ -769,6 +795,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Obter o tempo para alertas definido pelo utilizador",
                 "parameters": [
                     {
@@ -792,6 +821,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/alert/time/": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Atualiza a periodicidade de alerta determinando o tempo máximo até dar uma pessoa como perdida",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Atualiza a periodicidade de alerta",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Udpdate Alert",
+                        "name": "evaluation",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.UserPeriodUpdateSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "406": {
+                        "description": "Not acceptable"
+                    }
+                }
+            }
+        },
         "/user/info": {
             "get": {
                 "security": [
@@ -805,6 +892,9 @@ const docTemplate = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "User"
                 ],
                 "summary": "Obter a informação do utilizador",
                 "parameters": [
@@ -843,6 +933,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Obtem última posição/localização de cada User",
                 "parameters": [
                     {
@@ -869,7 +962,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/search": {
+        "/user/search/{username}": {
             "get": {
                 "security": [
                     {
@@ -883,6 +976,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Obter Users dado um username",
                 "parameters": [
                     {
@@ -890,6 +986,13 @@ const docTemplate = `{
                         "description": "Token",
                         "name": "Authorization",
                         "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Username",
+                        "name": "username",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -923,6 +1026,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "User"
+                ],
                 "summary": "Alterar estado do SOS",
                 "parameters": [
                     {
@@ -942,6 +1048,64 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/user/users-under-xkms": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exibe uma lista de users que se encontram num raio igual a inferior a x kms",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Exibe uma lista de users que se encontram num raio igual a inferior a x kms",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "radius",
+                        "name": "radius",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/swaggermodel.RadiusSwagger"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
                     }
                 }
             }
@@ -1000,9 +1164,6 @@ const docTemplate = `{
                 "alertTime": {
                     "type": "integer"
                 },
-                "password": {
-                    "type": "string"
-                },
                 "sos": {
                     "type": "boolean"
                 },
@@ -1017,6 +1178,152 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/model.Position"
                     }
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "swaggermodel.FollowingHistorySwagger": {
+            "type": "object",
+            "required": [
+                "end",
+                "followerID",
+                "start"
+            ],
+            "properties": {
+                "end": {
+                    "type": "string",
+                    "example": "2022-07-01"
+                },
+                "followerID": {
+                    "type": "integer"
+                },
+                "start": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                }
+            }
+        },
+        "swaggermodel.FollowingSwagger": {
+            "type": "object",
+            "properties": {
+                "FollowerUserID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "swaggermodel.PositionAddSwagger": {
+            "type": "object",
+            "required": [
+                "Latitude",
+                "Longitude"
+            ],
+            "properties": {
+                "Latitude": {
+                    "type": "number",
+                    "example": 39.557191
+                },
+                "Longitude": {
+                    "type": "number",
+                    "example": -7.8536599
+                }
+            }
+        },
+        "swaggermodel.RadiusSwagger": {
+            "type": "object",
+            "properties": {
+                "Radius": {
+                    "type": "integer"
+                }
+            }
+        },
+        "swaggermodel.UserLocationHistory": {
+            "type": "object",
+            "required": [
+                "end",
+                "start"
+            ],
+            "properties": {
+                "end": {
+                    "type": "string",
+                    "example": "2022-07-01"
+                },
+                "start": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                }
+            }
+        },
+        "swaggermodel.UserLocationHistoryUser": {
+            "type": "object",
+            "required": [
+                "end",
+                "start",
+                "userID"
+            ],
+            "properties": {
+                "end": {
+                    "type": "string",
+                    "example": "2022-07-01"
+                },
+                "start": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "swaggermodel.UserLocationWithFilters": {
+            "type": "object",
+            "required": [
+                "UserId",
+                "end",
+                "start"
+            ],
+            "properties": {
+                "UserId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "end": {
+                    "type": "string",
+                    "example": "2022-07-01"
+                },
+                "start": {
+                    "type": "string",
+                    "example": "2022-01-01"
+                }
+            }
+        },
+        "swaggermodel.UserLoginSwagger": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "swaggermodel.UserPeriodUpdateSwagger": {
+            "type": "object",
+            "properties": {
+                "alertTimeInHours": {
+                    "type": "integer"
+                }
+            }
+        },
+        "swaggermodel.UserRegisterSwagger": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
                 },
                 "username": {
                     "type": "string"

@@ -64,7 +64,13 @@ func RegisterHandler(c *gin.Context) {
 func RefreshHandler(c *gin.Context) {
 	var usr model.User
 
-	services.Db.Find(&usr, "username = ?", c.GetString("username"))
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Cannot find this user!"})
+		return
+	}
+
+	services.Db.Find(&usr, "username = ?", username)
 
 	if usr.Username == "" || !InvalidateToken(c) {
 		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Cannot be created!"})
@@ -82,13 +88,17 @@ func RefreshHandler(c *gin.Context) {
 func LogoutHandler(c *gin.Context) {
 	var usr model.User
 
-	services.Db.Find(&usr, "username = ?", c.GetString("username"))
+	username, exists := c.Get("username")
+	if !exists {
+		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Cannot be created!"})
+		return
+	}
 
+	services.Db.Find(&usr, "username = ?", username)
 	if InvalidateToken(c) {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success!"})
 		return
 	}
-	c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Cannot be created!"})
 }
 
 func InvalidateToken(c *gin.Context) bool {

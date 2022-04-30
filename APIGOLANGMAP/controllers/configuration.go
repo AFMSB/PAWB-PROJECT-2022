@@ -23,7 +23,7 @@ func UpdateAlertTime(c *gin.Context) {
 	}
 
 	type Alert struct {
-		AlertTime int
+		AlertTimeInHours int
 	}
 	var AlertTime Alert
 	if err := c.ShouldBindJSON(&AlertTime); err != nil {
@@ -31,10 +31,10 @@ func UpdateAlertTime(c *gin.Context) {
 		return
 	}
 
-	user.AlertTime = AlertTime.AlertTime
+	user.AlertTime = AlertTime.AlertTimeInHours
 
 	if user.InvalidAlertTime() {
-		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Alert time is not acceptable!"})
+		c.JSON(http.StatusNotAcceptable, gin.H{"status": http.StatusNotAcceptable, "message": "Alert time should be between 1h to 48 hours!"})
 		return
 	}
 

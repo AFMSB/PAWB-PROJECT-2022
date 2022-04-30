@@ -4,9 +4,10 @@ import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/services"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SearchUsersByUsername(c *gin.Context) {
@@ -16,8 +17,8 @@ func SearchUsersByUsername(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
 		return
 	}
-
-	username := c.Request.URL.Query().Get("username") //<---- here!
+	username := c.Param("username")
+	//username := c.Request.URL.Query().Get("username") //<---- here!
 
 	var users []model.User
 	//services.Db.Select("id, username").Where("username ILIKE ?", "%"+username+"%").Where("id != ?", userID).Where("access_mode != -1").Find(&users)
@@ -55,12 +56,23 @@ func GetUsersLastLocation(c *gin.Context) {
 	var userLocs []LastLocation
 
 	var users []model.User
+	var myUser model.User
+
 	services.Db.Find(&users)
 
 	if len(users) <= 0 {
 		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "No Users - Empty list!", "userLocs": userLocs})
 		return
 	}
+
+	userID, errAuth := c.Get("userid")
+
+	if errAuth == false {
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Auth Token Malformed!"})
+		return
+	}
+	services.Db.First(&myUser, userID)
+	
 
 	for _, user := range users {
 		var position model.Position
@@ -90,7 +102,7 @@ func GetUserInfo(c *gin.Context) {
 	}
 
 	var user model.User
-	if err := services.Db.First(&user, userID.(uint)).Error; err != nil {
+	if err := services.Db.Preload("UserFriends").Preload("UserPositions").First(&user, userID.(uint)).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "User Not Found."})
 		return
 	}
@@ -159,7 +171,7 @@ func GetAllUsersUnderXKms(c *gin.Context) {
 	}
 
 	if err := c.BindJSON(&bodyData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Bad request!"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": http.StatusBadRequest, "message": "Need to send a radius - Bad request!"})
 		return
 	}
 
@@ -171,6 +183,12 @@ func GetAllUsersUnderXKms(c *gin.Context) {
 	users, err := FetchAllUsersUnderXKms(user, bodyData.Radius*1000)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": http.StatusInternalServerError, "message": "Error", "Error": err})
+		return
+	}
+
+	if users == nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "the user has no locations"})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Success", "Users": users})
@@ -184,9 +202,11 @@ func FetchAllUsersUnderXKms(user model.User, radius int) ([]model.User, error) {
 	if err == nil {
 		services.Db.Raw("SELECT * from (SELECT users.id, username, alert_time, sos FROM users INNER JOIN followers f on users.id = f.follower_user_id where user_id = ?) as uf where uf.id in (SELECT user_id FROM (Select distinct on (user_id) * from positions order by user_id, created_at desc) as p WHERE ST_DWithin(geolocation, ST_MakePoint(?, ?)::geography, ?));", user.ID, userLastLoc.Longitude, userLastLoc.Latitude, radius).Scan(&users)
 	} else {
+		if users == nil {
+			return nil, nil
+		}
 		return users, err
 	}
-
 	return users, err
 }
 

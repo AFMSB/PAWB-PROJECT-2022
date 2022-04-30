@@ -33,8 +33,6 @@ definitions:
         type: integer
       alertTime:
         type: integer
-      password:
-        type: string
       sos:
         type: boolean
       userFriends:
@@ -48,50 +46,109 @@ definitions:
       username:
         type: string
     type: object
+  swaggermodel.FollowingHistorySwagger:
+    properties:
+      end:
+        example: "2022-07-01"
+        type: string
+      followerID:
+        type: integer
+      start:
+        example: "2022-01-01"
+        type: string
+    required:
+    - end
+    - followerID
+    - start
+    type: object
+  swaggermodel.FollowingSwagger:
+    properties:
+      FollowerUserID:
+        type: integer
+    type: object
+  swaggermodel.PositionAddSwagger:
+    properties:
+      Latitude:
+        example: 39.557191
+        type: number
+      Longitude:
+        example: -7.8536599
+        type: number
+    required:
+    - Latitude
+    - Longitude
+    type: object
+  swaggermodel.RadiusSwagger:
+    properties:
+      Radius:
+        type: integer
+    type: object
+  swaggermodel.UserLocationHistory:
+    properties:
+      end:
+        example: "2022-07-01"
+        type: string
+      start:
+        example: "2022-01-01"
+        type: string
+    required:
+    - end
+    - start
+    type: object
+  swaggermodel.UserLocationHistoryUser:
+    properties:
+      end:
+        example: "2022-07-01"
+        type: string
+      start:
+        example: "2022-01-01"
+        type: string
+      userID:
+        type: integer
+    required:
+    - end
+    - start
+    - userID
+    type: object
+  swaggermodel.UserLocationWithFilters:
+    properties:
+      UserId:
+        items:
+          type: integer
+        type: array
+      end:
+        example: "2022-07-01"
+        type: string
+      start:
+        example: "2022-01-01"
+        type: string
+    required:
+    - UserId
+    - end
+    - start
+    type: object
+  swaggermodel.UserLoginSwagger:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  swaggermodel.UserPeriodUpdateSwagger:
+    properties:
+      alertTimeInHours:
+        type: integer
+    type: object
+  swaggermodel.UserRegisterSwagger:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /alert/time/:
-    put:
-      consumes:
-      - application/json
-      description: Atualiza a periodicidade de alerta determinando o tempo máximo
-        até dar uma pessoa como perdida
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Udpdate Alert
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.User'
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.User'
-        "400":
-          description: Bad request
-        "401":
-          description: Unauthorized
-        "404":
-          description: Not found
-        "406":
-          description: Not acceptable
-      security:
-      - BearerAuth: []
-      summary: Atualiza a periodicidade de alerta
   /auth/login:
     post:
       consumes:
@@ -103,7 +160,7 @@ paths:
         name: evaluation
         required: true
         schema:
-          $ref: '#/definitions/model.User'
+          $ref: '#/definitions/swaggermodel.UserLoginSwagger'
       produces:
       - application/json
       responses:
@@ -116,18 +173,14 @@ paths:
         "401":
           description: Unauthorized
       summary: Realizar autenticação
+      tags:
+      - Authentication
   /auth/logout:
-    put:
+    post:
       consumes:
       - application/json
       description: Desautentica o utilizador invalidando o token atual
       parameters:
-      - description: Do logout
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.User'
       - description: Token
         in: header
         name: Authorization
@@ -141,6 +194,8 @@ paths:
         "406":
           description: Cannot log out
       summary: Realizar desautenticação
+      tags:
+      - Authentication
   /auth/refresh_token:
     put:
       consumes:
@@ -166,6 +221,8 @@ paths:
         "406":
           description: Cannot invalidate old token
       summary: Atualiza token de autenticação
+      tags:
+      - Authentication
   /auth/register:
     post:
       consumes:
@@ -177,7 +234,7 @@ paths:
         name: evaluation
         required: true
         schema:
-          $ref: '#/definitions/model.User'
+          $ref: '#/definitions/swaggermodel.UserRegisterSwagger'
       produces:
       - application/json
       responses:
@@ -190,6 +247,8 @@ paths:
         "401":
           description: Unauthorized
       summary: Realizar registro
+      tags:
+      - Authentication
   /follower/:
     delete:
       consumes:
@@ -206,7 +265,7 @@ paths:
         name: follower
         required: true
         schema:
-          $ref: '#/definitions/model.Follower'
+          $ref: '#/definitions/swaggermodel.FollowingSwagger'
       produces:
       - application/json
       responses:
@@ -219,6 +278,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Desassocia um Follower(User) de um User
+      tags:
+      - Follower
     get:
       consumes:
       - application/json
@@ -243,6 +304,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem os Followers
+      tags:
+      - Follower
     post:
       consumes:
       - application/json
@@ -258,7 +321,7 @@ paths:
         name: follower
         required: true
         schema:
-          $ref: '#/definitions/model.Follower'
+          $ref: '#/definitions/swaggermodel.FollowingSwagger'
       produces:
       - application/json
       responses:
@@ -275,6 +338,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Associa um Follower(User) a um User
+      tags:
+      - Follower
   /follower/following:
     get:
       consumes:
@@ -301,6 +366,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem os users que estamos a seguir
+      tags:
+      - Follower
   /follower/history:
     post:
       consumes:
@@ -317,7 +384,7 @@ paths:
         name: follower
         required: true
         schema:
-          $ref: '#/definitions/model.Position'
+          $ref: '#/definitions/swaggermodel.FollowingHistorySwagger'
       produces:
       - application/json
       responses:
@@ -336,7 +403,42 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem as localizações de um Follower
+      tags:
+      - Follower
   /position:
+    post:
+      consumes:
+      - application/json
+      description: Cria uma localizacao de um utilizador em especifico
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add Location
+        in: body
+        name: evaluation
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.PositionAddSwagger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Position'
+        "400":
+          description: Bad request
+        "404":
+          description: Not found
+      security:
+      - BearerAuth: []
+      summary: Adicionar uma localizaçao
+      tags:
+      - Position
+  /position/:
     get:
       consumes:
       - application/json
@@ -361,36 +463,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obter a última localização do utilizador
-    post:
-      consumes:
-      - application/json
-      description: Cria uma localizacao de um utilizador em especifico
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Add Location
-        in: body
-        name: evaluation
-        required: true
-        schema:
-          $ref: '#/definitions/model.Position'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/model.Position'
-        "400":
-          description: Bad request
-        "404":
-          description: Not found
-      security:
-      - BearerAuth: []
-      summary: Adicionar uma localizaçao
+      tags:
+      - Position
   /position/{id}:
     delete:
       consumes:
@@ -418,6 +492,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Exclui uma localização
+      tags:
+      - Position
   /position/filter:
     post:
       consumes:
@@ -429,6 +505,12 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Add Location
+        in: body
+        name: localization
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.UserLocationWithFilters'
       produces:
       - application/json
       responses:
@@ -445,8 +527,10 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem todas as localizações dos utilizadores com filtros
+      tags:
+      - Position
   /position/history:
-    get:
+    post:
       consumes:
       - application/json
       description: Exibe a lista de todas as localizações do utilizador
@@ -456,6 +540,12 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: get locations history
+        in: body
+        name: localization
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.UserLocationHistory'
       produces:
       - application/json
       responses:
@@ -472,6 +562,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem todas as localizações do utilizador
+      tags:
+      - Position
   /position/history/user:
     post:
       consumes:
@@ -483,6 +575,12 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Add Location
+        in: body
+        name: localization
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.UserLocationHistoryUser'
       produces:
       - application/json
       responses:
@@ -499,6 +597,21 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem todas as localizações do utilizador
+      tags:
+      - Position
+  /socket:
+    get:
+      description: Web Socket permite enviar notificações diretamente para o frontend
+      responses:
+        "200":
+          description: Connection confirm
+        "400":
+          description: User Token Malformed
+        "404":
+          description: Connection failed
+      summary: Web Socket permite enviar notificações diretamente para o frontend
+      tags:
+      - Socket
   /user/:
     get:
       consumes:
@@ -524,6 +637,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem todos os  Users
+      tags:
+      - User
   /user/alert-time:
     get:
       consumes:
@@ -547,6 +662,46 @@ paths:
       security:
       - BearerAuth: []
       summary: Obter o tempo para alertas definido pelo utilizador
+      tags:
+      - User
+  /user/alert/time/:
+    put:
+      consumes:
+      - application/json
+      description: Atualiza a periodicidade de alerta determinando o tempo máximo
+        até dar uma pessoa como perdida
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Udpdate Alert
+        in: body
+        name: evaluation
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.UserPeriodUpdateSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+        "406":
+          description: Not acceptable
+      security:
+      - BearerAuth: []
+      summary: Atualiza a periodicidade de alerta
+      tags:
+      - User
   /user/info:
     get:
       consumes:
@@ -570,6 +725,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obter a informação do utilizador
+      tags:
+      - User
   /user/last-positions:
     get:
       consumes:
@@ -596,7 +753,9 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtem última posição/localização de cada User
-  /user/search:
+      tags:
+      - User
+  /user/search/{username}:
     get:
       consumes:
       - application/json
@@ -605,6 +764,11 @@ paths:
       - description: Token
         in: header
         name: Authorization
+        required: true
+        type: string
+      - description: Username
+        in: path
+        name: username
         required: true
         type: string
       produces:
@@ -621,6 +785,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Obter Users dado um username
+      tags:
+      - User
   /user/sos:
     post:
       consumes:
@@ -644,4 +810,45 @@ paths:
       security:
       - BearerAuth: []
       summary: Alterar estado do SOS
+      tags:
+      - User
+  /user/users-under-xkms:
+    post:
+      consumes:
+      - application/json
+      description: Exibe uma lista de users que se encontram num raio igual a inferior
+        a x kms
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: radius
+        in: body
+        name: radius
+        required: true
+        schema:
+          $ref: '#/definitions/swaggermodel.RadiusSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+        "500":
+          description: Internal Server Error
+      security:
+      - BearerAuth: []
+      summary: Exibe uma lista de users que se encontram num raio igual a inferior
+        a x kms
+      tags:
+      - User
 swagger: "2.0"

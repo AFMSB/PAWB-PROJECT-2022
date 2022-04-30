@@ -8,6 +8,7 @@ import (
 
 // @Summary Obtem os Followers
 // @Description Exibe a lista, sem todos os campos, de todos os followers
+// @Tags Follower
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
@@ -21,6 +22,7 @@ func GetAllFollowers(c *gin.Context) {
 
 // @Summary Obtem os users que estamos a seguir
 // @Description Exibe a lista, sem todos os campos, de todos os users que estamos a seguir
+// @Tags Follower
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
@@ -34,11 +36,12 @@ func GetAllFollowingUsers(c *gin.Context) {
 
 // @Summary Associa um Follower(User) a um User
 // @Description Associa um Follower a um User
+// @Tags Follower
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Param follower body model.Follower	 true "Associate User as Follower"
+// @Param follower body swaggermodel.FollowingSwagger	 true "Associate User as Follower"
 // @Router /follower/ [post]
 // @Success 200 {array} model.Follower
 // @Failure 400 "Token Malformed, Check Syntax, Follower User ID Already Associated"
@@ -49,11 +52,12 @@ func AssociateFollower(c *gin.Context) {
 
 // @Summary Desassocia um Follower(User) de um User
 // @Description Desassocia um Follower de um User
+// @Tags Follower
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Param follower body model.Follower true "Deassociate Follower from User"
+// @Param follower body swaggermodel.FollowingSwagger true "Deassociate Follower from User"
 // @Router /follower/ [delete]
 // @Success 200 "Deassociation Success"
 // @Failure 400 "Token Malformed, Check Syntax"
@@ -64,11 +68,12 @@ func DeassociateFollower(c *gin.Context) {
 
 // @Summary Obtem as localizações de um Follower
 // @Description Obtem as localizações de um determinado Follower
+// @Tags Follower
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Param follower body model.Position true "get follower locations history"
+// @Param follower body swaggermodel.FollowingHistorySwagger true "get follower locations history"
 // @Router /follower/history [post]
 // @Success 200 {array} model.Position
 // @Failure 400 "Token Malformed, Check Syntax, Dates Malformed"

@@ -3,11 +3,17 @@ package controllers
 import (
 	"APIGOLANGMAP/model"
 	"APIGOLANGMAP/services"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
+type res struct {
+	Name  string
+	Email string
+	ID    int
+}
 type UserFollower struct {
 	Id         uint   `json:"id"`
 	Username   string `json:"username" gorm:"unique"`
@@ -139,8 +145,9 @@ func verifyUserIsFollowing(userID uint, followerUserID uint) bool {
 
 func GetFollowerLocationsHistory(c *gin.Context) {
 	type FollowerLocation struct {
-		Location   Location `json:"location" binding:"required"`
-		FollowerID int      `json:"followerID" binding:"required"`
+		Start      string `json:"start" binding:"required"`
+		End        string `json:"end" binding:"required"`
+		FollowerID int    `json:"followerID" binding:"required"`
 	}
 
 	userID, errAuth := c.Get("userid")
@@ -167,8 +174,8 @@ func GetFollowerLocationsHistory(c *gin.Context) {
 		return
 	}
 
-	var startDate, errStart = ValidateDate(followerLocation.Location.Start)
-	var endDate, errEnd = ValidateDate(followerLocation.Location.End)
+	var startDate, errStart = ValidateDate(followerLocation.Start)
+	var endDate, errEnd = ValidateDate(followerLocation.End)
 
 	var positions []model.Position
 	// Datas invalidas retorna todas as posições do utilizador

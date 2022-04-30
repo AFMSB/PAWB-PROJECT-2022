@@ -5,6 +5,7 @@ import (
 	"APIGOLANGMAP/repository"
 	"APIGOLANGMAP/routes"
 	"APIGOLANGMAP/services"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -34,6 +35,8 @@ func main() {
 	// Creates a gin router with default middleware:
 	// logger and recovery (crash-free) middleware
 	router := gin.New()
+	router.Use(services.CORSMiddleware())
+
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
@@ -52,7 +55,7 @@ func main() {
 		follower.DELETE("/", routes.DeassociateFollower)
 	}
 
-	alertTime := router.Group("/api/v1/alert")
+	alertTime := router.Group("/api/v1/user/alert")
 	alertTime.Use(services.AuthorizationRequired())
 	{
 		alertTime.PUT("/time", routes.UpdateAlertTime)
@@ -74,7 +77,7 @@ func main() {
 		position.GET("/", routes.GetMyLocation)
 		position.POST("/history", routes.GetLocationHistory)
 		position.POST("/history/user", routes.GetUserLocationsHistory)
-		position.DELETE("/", routes.DeleteLocation)
+		position.DELETE("/:id", routes.DeleteLocation)
 		position.POST("/filter", routes.GetUsersLocationWithFilters)
 
 	}
@@ -85,7 +88,7 @@ func main() {
 		user.GET("/", routes.GetAllUsers)
 		user.GET("/info", routes.GetUserInfo)
 		user.GET("/last-positions", routes.GetUsersLastLocation)
-		user.GET("/search", routes.SearchUsersByUsername)
+		user.GET("/search/:username", routes.SearchUsersByUsername)
 		user.POST("/sos", routes.ChangeSOSState)
 		user.GET("/alert-time", routes.GetAlertTime)
 		user.POST("/users-under-xkms", routes.GetUsersUnderXkms)

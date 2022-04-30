@@ -16,10 +16,10 @@ type User struct {
 	AlertTime     int        `json:"alertTime,omitempty" gorm:"default:1"`
 	SOS           bool       `json:"sos" gorm:"default:0"`
 	Username      string     `json:"username" gorm:"unique"`
-	Password      string     `json:"password,omitempty"`
+	Password      string     `json:"-"`
 	AccessMode    int        `json:"access_mode" gorm:"default:1"`
 	UserFriends   []Follower `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:user_id;references:id"`
-	UserPositions []Position `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	UserPositions []Position `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:user_id;references:id"`
 }
 
 func (user User) IsAdmin() bool {

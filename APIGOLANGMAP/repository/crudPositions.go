@@ -3,9 +3,10 @@ package repository
 import (
 	"APIGOLANGMAP/model"
 	"database/sql"
+	"log"
+
 	_ "github.com/lib/pq"
 	"gorm.io/gorm"
-	"log"
 )
 
 var DB *gorm.DB
@@ -53,7 +54,7 @@ func (p *PositionStruck) GetAllUsers() ([]model.User, error) {
 	err := DB.Transaction(func(tx *gorm.DB) error {
 		result := tx.Where("access_mode != -1").Find(&users)
 		if result.Error != nil {
-			panic("ERROR GETTING the Positions")
+			log.Panic("ERROR GETTING the Positions")
 			return result.Error
 		}
 		return nil

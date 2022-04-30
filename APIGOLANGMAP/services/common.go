@@ -2,16 +2,17 @@ package services
 
 import (
 	"APIGOLANGMAP/model"
-	"github.com/jaswdr/faker"
-	"golang.org/x/crypto/bcrypt"
-	postgres "gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"io/ioutil"
 	"log"
 	"math"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/jaswdr/faker"
+	"golang.org/x/crypto/bcrypt"
+	postgres "gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var username string

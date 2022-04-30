@@ -8,13 +8,13 @@ import (
 
 // @Summary Atualiza a periodicidade de alerta
 // @Description Atualiza a periodicidade de alerta determinando o tempo máximo até dar uma pessoa como perdida
+// @Tags User
 // @Accept  json
 // @Produce  json
 // @Security BearerAuth
 // @param Authorization header string true "Token"
-// @Param evaluation body model.User true "Udpdate Alert"
-// @Param id path int true "User ID"
-// @Router /alert/time/ [put]
+// @Param evaluation body swaggermodel.UserPeriodUpdateSwagger true "Udpdate Alert"
+// @Router /user/alert/time/ [put]
 // @Success 200 {object} model.User
 // @Failure 400 "Bad request"
 // @Failure 404 "Not found"
